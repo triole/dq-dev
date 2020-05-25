@@ -1,0 +1,8 @@
+[{
+    "srcDir": ".",
+    "destDir": "/tmp",
+    "files": "**",
+    "command": "coda -t '${srcFile}'",
+    "showOutput": false,
+    "showError": false
+}]

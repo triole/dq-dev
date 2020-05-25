@@ -1,0 +1,6 @@
+tmp/
+vol/
+
+*.local
+docker-compose.yaml
+notes.md
