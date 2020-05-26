@@ -27,17 +27,3 @@ function maybe_copy() {
 function get_container_ip() {
     hostname -I | awk '{print $1}'
 }
-
-function replace_in_wpconfig() {
-    str="${1}"
-    rep="${2}"
-    wpc="${WP}/wp-config.php"
-    echo "Replace in file ${wpc}, ${str} -> ${rep}"
-    sed -i "s|\('${str}',\s\).*)|\1'${rep}'\)|g" "${wpc}"
-}
-
-function replace_ip_in_vhost() {
-    dqip="$(get_container_ip):80"
-    echo "Replace of file /etc/apache2/sites-enabled/vhost2.conf"
-    sudo sed -i "s|http://[.0-9a-z:]*|http://${dqip}|g" "/etc/apache2/sites-enabled/vhost2.conf"
-}

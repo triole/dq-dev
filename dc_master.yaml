@@ -45,6 +45,8 @@ services:
         build:
             context: ./wpdb
         container_name: dqdev-wpdb
+        ports:
+            - "9283:3306"
         restart: always
         env_file:
             - ./wpdb/.env

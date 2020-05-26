@@ -13,11 +13,23 @@ if [ -f "${DQAPP}/install-custom.sh" ]; then
     ${DQAPP}/install-custom.sh
 fi
 
-# sudo mkdir -p "/etc/httpd/vhosts.d"
-# maybe_copy "/tmp/vhost2.conf" "/etc/httpd/vhosts.d/vhost2.conf" "sudo"
-maybe_copy "/tmp/wsgi.py" "${DQAPP}/config/wsgi.py" "sudo"
+maybe_copy "${HOME}/tpl/wsgi.py" "${DQAPP}/config/wsgi.py" "sudo"
 
-replace_ip_in_vhost
+# render wordpress config
+cat "${HOME}/tpl/wp-config.php" |
+    sd "<WORDPRESS_URL>" "${WORDPRESS_URL}" |
+    sd "<SITE_URL>" "${SITE_URL}" |
+    sd "<HTTP_HOST>" "${HTTP_HOST}" |
+    sd "<GLOBAL_PREFIX>" "${GLOBAL_PREFIX}" |
+    sd "<WORDPRESS_DB_NAME>" "${WORDPRESS_DB_NAME}" |
+    sd "<WORDPRESS_DB_USER>" "${WORDPRESS_DB_USER}" |
+    sd "<WORDPRESS_DB_HOST>" "${WORDPRESS_DB_HOST}" |
+    sd "<WORDPRESS_DB_PASSWORD>" "${WORDPRESS_DB_PASSWORD}" \
+        >"${HOME}/wp/wp-config.php"
+
+dqip="$(get_container_ip)"
+sudo /vol/tools/sd "<PLACEHOLDER>" "${dqip}" \
+    "/etc/apache2/sites-enabled/vhost1.conf"
 
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
@@ -28,6 +40,4 @@ if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
         config.wsgi:application -D
 fi
 
-sudo a2enmod proxy
-sudo a2enmod rewrite
 sudo /usr/sbin/apache2 -D FOREGROUND
