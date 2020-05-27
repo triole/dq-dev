@@ -69,4 +69,4 @@ print(tap_result)
 
 ## URLs
 
-[http://localhost:9280](http://localhost:9280) [http://localhost:9280/cms](http://localhost:9280/cms)
+[http://localhost:9280](http://localhost:9280) [http://localhost:9280/cms/wp-login.php](http://localhost:9280/cms/wp-login.php) [http://localhost:9280/cms](http://localhost:9280/cms)
