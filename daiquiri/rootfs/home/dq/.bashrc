@@ -8,6 +8,8 @@ alias tailf="tail -F"
 alias tlp='netstat -tulpen'
 alias we="watchexec ${@}"
 alias lsmod="ls /usr/lib/apache2/modules/"
+alias sock="sudo curl --no-buffer -XGET --unix-socket /var/run/php/php7.3-fpm.sock http://index.php"
+alias rephp="sudo pkill -9 php-fpm && sudo /usr/sbin/php-fpm7.3"
 
 export EXA_COLORS="da=1;34:gm=1;34:di=1;34:b0=1;31"
 alias ll="exa --long --group --header --modified --git --group-directories-first"

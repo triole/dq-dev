@@ -1,0 +1,34 @@
+{
+    debug
+    http_port 9280
+}
+
+:9280 {
+    reverse_proxy * :8000
+    header ForwardTo Gunicorn
+}
+
+:9280/static* {
+    uri strip_prefix /static
+    rewrite /static/ /
+
+    file_server
+    root * /home/dq/app/static_root
+
+    header ForwardTo Static
+}
+
+:9280/cms* {
+    uri strip_prefix /cms
+    redir /cms /cms/
+    rewrite /cms/ /
+
+    file_server
+    root * /home/dq/wp
+
+    # socket for production, port for debug
+    php_fastcgi unix//run/php/php.sock
+    # php_fastcgi 127.0.0.1:9000 php
+
+    header ForwardTo Wordpress
+}
