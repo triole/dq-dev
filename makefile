@@ -3,7 +3,6 @@ DC_MASTER="dc_master.yaml"
 DC_TEMP="docker-compose.yaml"
 
 DOCKER_IN_GROUPS=$(shell groups | grep "docker")
-MYID=$(shell id -u)
 
 ifeq ($(strip $(DOCKER_IN_GROUPS)),)
 	DC_CMD=sudo docker-compose
@@ -12,23 +11,6 @@ else
 	DC_CMD=docker-compose
 	D_CMD=docker
 endif
-
-VARS_ENV=daiquiri/.env
-GLOBAL_PREFIX=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=GLOBAL_PREFIX=).*")
-QUERY_DOWNLOAD_DIR=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=QUERY_DOWNLOAD_DIR=).*")
-ARCHIVE_BASE_PATH=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=ARCHIVE_BASE_PATH=).*")
-DAIQUIRI_APP=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=DAIQUIRI_APP=).*")
-
-WORDPRESS_DB_USER=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=WORDPRESS_DB_USER=).*")
-WORDPRESS_DB_NAME=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=WORDPRESS_DB_NAME=).*")
-WORDPRESS_DB_PASSWORD=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=WORDPRESS_DB_PASSWORD=).*")
-WORDPRESS_DB_HOST=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=WORDPRESS_DB_HOST=).*")
-DAIQUIRI_URL=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=DAIQUIRI_URL=).*")
-WORDPRESS_URL=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=WORDPRESS_URL=).*")
-HTTP_HOST=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=HTTP_HOST=).*")
-SITE_URL=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=SITE_URL=).*")
-DOCKERHOST=$(shell cat ${CURDIR}/${VARS_ENV} | grep -Po "(?<=DOCKERHOST=).*")
-VARS_WP=wpdb/.env
 
 all: render_yaml run_build tail_logs
 build: render_yaml run_build

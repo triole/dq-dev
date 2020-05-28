@@ -2,7 +2,7 @@
 
 source "${HOME}/.bashrc"
 
-${HOME}/sh/install-wp.sh
+# ${HOME}/sh/install-wp.sh
 ${HOME}/sh/install-daiquiri.sh
 
 cd "${DQAPP}" || exit 1
@@ -13,7 +13,11 @@ if [ -f "${DQAPP}/install-custom.sh" ]; then
     ${DQAPP}/install-custom.sh
 fi
 
-maybe_copy "${HOME}/tpl/wsgi.py" "${DQAPP}/config/wsgi.py" "sudo"
+sfil="${HOME}/tpl/wsgi.py"
+tfil="${DQAPP}/config/wsgi.py"
+if [[ ! -f "${tfil}" ]]; then
+    copy -f "${sfil}" "${tfil}"
+fi
 
 # render wordpress config
 cat "${HOME}/tpl/wp-config.php" |
