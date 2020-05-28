@@ -27,10 +27,6 @@ cat "${HOME}/tpl/wp-config.php" |
     sd "<WORDPRESS_DB_PASSWORD>" "${WORDPRESS_DB_PASSWORD}" \
         >"${HOME}/wp/wp-config.php"
 
-dqip="$(get_container_ip)"
-sudo /vol/tools/sd "<PLACEHOLDER>" "${dqip}" \
-    "/etc/apache2/sites-enabled/vhost1.conf"
-
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
     gunicorn --bind 0.0.0.0:8000 \

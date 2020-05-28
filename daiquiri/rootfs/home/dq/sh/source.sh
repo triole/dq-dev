@@ -23,7 +23,3 @@ function maybe_copy() {
         eval "${cmd}"
     fi
 }
-
-function get_container_ip() {
-    hostname -I | awk '{print $1}'
-}

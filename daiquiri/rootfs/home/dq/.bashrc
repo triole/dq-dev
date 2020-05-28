@@ -15,7 +15,6 @@ export EXA_COLORS="da=1;34:gm=1;34:di=1;34:b0=1;31"
 alias ll="exa --long --group --header --modified --git --group-directories-first"
 alias lla="exa --long --group --header --modified --created --accessed --git --all --group-directories-first"
 
-export DQIP=$(get_container_ip)
 export LC_ALL=en_US.utf8
 
 cd "${HOME}"
