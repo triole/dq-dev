@@ -2,7 +2,6 @@
 
 source "${HOME}/.bashrc"
 
-# ${HOME}/sh/install-wp.sh
 ${HOME}/sh/install-daiquiri.sh
 
 cd "${DQAPP}" || exit 1
@@ -40,11 +39,5 @@ if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
         config.wsgi:application -D
 fi
 
-sudo mkdir /run/php
-sudo /vol/tools/sd "listen =.*" "listen = /run/php/php.sock" \
-    "/etc/php/7.3/fpm/pool.d/www.conf"
-
-# sudo /usr/sbin/apache2 -D FOREGROUND
-sudo mkdir -p /run/php
 sudo /usr/sbin/php-fpm7.3
 sudo /vol/tools/caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch
