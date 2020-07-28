@@ -1,5 +1,5 @@
 active_app:
-    name: daiquiri
+    name: applause
     mountpoint: /home/dq/app
 
 active_volumes:

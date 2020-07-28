@@ -60,7 +60,7 @@ RUN groupadd -g "${GID}" "${GNAME}" \
 
 USER ${USER}
 
-HEALTHCHECK --timeout=5s --interval=5s --retries=3 \
+HEALTHCHECK --timeout=5s --interval=60s --retries=3 \
    CMD curl -f http://localhost:9280 || exit 1
 
 CMD ["/drun.sh"]

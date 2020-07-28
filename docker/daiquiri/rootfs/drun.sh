@@ -32,15 +32,14 @@ cat "${HOME}/tpl/wp-config.php" |
 
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
-    # use django dev server for development,
-    # because of auto reload and no caching
-    # python3 manage.py runserver 0.0.0.0:8000
+    # django dev server for development, has auto reload, does no cache
+    python3 manage.py runserver 0.0.0.0:8000 &
 
-    gunicorn --bind 0.0.0.0:8000 \
-        --log-file=/dev/stdout \
-        --access-logfile=/dev/stdout \
-        --workers 2 \
-        config.wsgi:application -D
+    # gunicorn --bind 0.0.0.0:8000 \
+    #     --log-file=/dev/stdout \
+    #     --access-logfile=/dev/stdout \
+    #     --workers 2 \
+    #     config.wsgi:application -D
 fi
 
 sudo /usr/sbin/php-fpm7.3
