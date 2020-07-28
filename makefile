@@ -22,12 +22,10 @@ log: tail_logs
 yaml: render_yaml
 
 render_yaml:
-	cat ${DC_MASTER} \
-		| sed 's|<HOME>|${HOME}|g' \
-		| sed 's|<CURDIR>|${CURDIR}|g' \
-		> ${DC_TEMP}
+	python3 ./py/render_yaml.py
 
 run_build:
+	$(D_CMD) volume rm dq_app || :
 	$(DC_CMD) up --build -d
 
 run_down:

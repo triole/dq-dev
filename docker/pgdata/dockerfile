@@ -1,9 +1,11 @@
 FROM postgres:latest
 
-ENV PATH="${PATH}:/opt"
+ENV PATH="${PATH}:/opt:/vol/tools"
 
 RUN apt update -y && apt install -y \
     postgresql-client
+
+COPY ./opt/ /
 
 # create DB, user, permissions
 

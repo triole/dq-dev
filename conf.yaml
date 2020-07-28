@@ -1,0 +1,18 @@
+active_app:
+    name: daiquiri
+    mountpoint: /home/dq/app
+
+active_volumes:
+    dq_source: /home/dq/source
+    shed: /vol/tools/shed
+    testdata: /vol/testdata
+
+folders:
+    # apps
+    applause: <HOME>/rolling/aip/gitlab/applause-app
+    daiquiri: <HOME>/rolling/aip/github/daiquiri-app
+    rave: <HOME>/rolling/aip/gitlab/rave-app
+    # other
+    dq_source: <HOME>/rolling/aip/github/daiquiri
+    shed: <HOME>/tools/shed
+    testdata: <HOME>/rolling/aip/testdata/app-testdata-importer

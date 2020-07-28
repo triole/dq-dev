@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+    daiquiri:
+        build:
+            context: ./docker/daiquiri
+        container_name: dqdev-daiquiri
+        depends_on:
+            - pgapp
+        ports:
+            - "9280:9280"
+        links:
+            - pgdata
+            - wpdb
+        restart: always
+        env_file:
+            - ./docker/daiquiri/.env
+
+    pgapp:
+        build:
+            context: ./docker/pgapp
+        container_name: dqdev-pgapp
+        ports:
+            - "9281:5432"
+        restart: always
+        env_file:
+            - ./docker/pgapp/.env
+
+    pgdata:
+        build:
+            context: ./docker/pgdata
+        container_name: dqdev-pgdata
+        ports:
+            - "9282:5432"
+        restart: always
+        env_file:
+            - ./docker/pgdata/.env
+
+    wpdb:
+        build:
+            context: ./docker/wpdb
+        container_name: dqdev-wpdb
+        ports:
+            - "9283:3306"
+        restart: always
+        env_file:
+            - ./docker/wpdb/.env

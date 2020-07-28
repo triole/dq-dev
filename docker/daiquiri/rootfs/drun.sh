@@ -32,6 +32,10 @@ cat "${HOME}/tpl/wp-config.php" |
 
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
+    # use django dev server for development,
+    # because of auto reload and no caching
+    # python3 manage.py runserver 0.0.0.0:8000
+
     gunicorn --bind 0.0.0.0:8000 \
         --log-file=/dev/stdout \
         --access-logfile=/dev/stdout \
@@ -40,4 +44,4 @@ if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
 fi
 
 sudo /usr/sbin/php-fpm7.3
-sudo /vol/tools/caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch
+sudo /vol/tools/shed/caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch
