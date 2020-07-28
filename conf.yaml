@@ -15,4 +15,4 @@ folders:
     # other
     dq_source: <HOME>/rolling/aip/github/daiquiri
     shed: <HOME>/tools/shed
-    testdata: <HOME>/rolling/aip/testdata/app-testdata-importer
+    testdata: <HOME>/rolling/aip/self/app-testdata-importer/

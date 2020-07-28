@@ -1,6 +1,7 @@
 {
     debug
     http_port 9280
+    auto_https disable_redirects
 }
 
 :9280 {
