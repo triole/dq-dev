@@ -16,7 +16,7 @@
 My personal daiquiri dev setup which tries to keep things simple. Shell tools are mounted in volumes. Make sure to check the volume settings in `dc_master.yaml`. The following binaries are required and need to be available in path.
 
 1.	[caddy](https://github.com/caddyserver/caddy)
-2.	[sd] https://github.com/chmln/sd
+2.	[sd](https://github.com/chmln/sd)
 
 Daiquiri is exposed on port `:9280`.
 
