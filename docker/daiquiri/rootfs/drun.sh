@@ -30,6 +30,8 @@ cat "${HOME}/tpl/wp-config.php" |
     sd "<WORDPRESS_DB_PASSWORD>" "${WORDPRESS_DB_PASSWORD}" \
         >"${HOME}/wp/wp-config.php"
 
+${HOME}/sh/init-wordpress.sh
+
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
     # django dev server for development, has auto reload, does no cache

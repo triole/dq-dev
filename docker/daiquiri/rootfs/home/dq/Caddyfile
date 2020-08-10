@@ -25,6 +25,9 @@
 }
 
 :9280/cms* {
+    redir /cms/admin /cms/admin/
+    redir /cms/admin/ /cms/wp-admin/
+
     uri strip_prefix /cms
     redir /cms /cms/
     rewrite /cms/ /
