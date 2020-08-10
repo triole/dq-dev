@@ -1,5 +1,5 @@
 active_app:
-    name: applause
+    name: xmmssc
     mountpoint: /home/dq/app
 
 active_volumes:
@@ -12,6 +12,7 @@ folders:
     applause: <HOME>/rolling/aip/gitlab/applause-app
     daiquiri: <HOME>/rolling/aip/github/daiquiri-app
     rave: <HOME>/rolling/aip/gitlab/rave-app
+    xmmssc: <HOME>/rolling/aip/gitlab/xmmssc-app/
     # other
     dq_source: <HOME>/rolling/aip/github/daiquiri
     shed: <HOME>/tools/shed
