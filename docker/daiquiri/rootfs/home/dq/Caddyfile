@@ -1,7 +1,12 @@
 {
     debug
     http_port 9280
+    http_port 80
     auto_https disable_redirects
+}
+
+:80 {
+    reverse_proxy * :9280
 }
 
 :9280 {

@@ -9,6 +9,7 @@ services:
             - pgapp
         ports:
             - "9280:9280"
+            - "80:80"
         links:
             - pgdata
             - wpdb
