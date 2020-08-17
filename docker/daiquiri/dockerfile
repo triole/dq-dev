@@ -6,9 +6,9 @@ ENV GNAME=dq
 ENV GID=1000
 ENV HOME=/home/dq
 
-ENV PATH=${PATH}:/home/dq/sh:/home/dq/.local/bin:/vol/tools/shed:${HOME}/sh
-ENV WORDPRESS_PATH=/home/dq/wp/
+ENV PATH=${PATH}:/home/dq/sh:/home/dq/.local/bin:/vol/tools/shed:${HOME}/bin:${HOME}/sh
 ENV PHP_CONF=/etc/php/7.3/fpm/pool.d/www.conf
+ENV WORDPRESS_PATH=/home/dq/wp/
 
 RUN apt update -y && apt install -y \
     curl \
@@ -50,6 +50,7 @@ RUN git clone \
     ${WORDPRESS_PATH}/wp-content/themes/daiquiri
 
 COPY ./rootfs /
+RUN ln -s /vol/tools/shed/caddy /bin/caddy
 
 RUN groupadd -g "${GID}" "${GNAME}" \
  && useradd -m -s /bin/bash -g "${GNAME}" -u "${UID}" "${USER}" \

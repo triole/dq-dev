@@ -34,11 +34,18 @@ def save_yaml(data, filename):
 
 def make_volume(name, device):
     vol = {}
-    vol['driver_opts'] = {}
-    vol['driver_opts']['device'] = replace_vars(device)
-    vol['driver_opts']['o'] = 'bind'
-    vol['driver_opts']['type'] = 'none'
-    vol['name'] = name
+    device = replace_vars(device)
+    if os.path.isdir(device) is False:
+        print(
+            'Run without volume \"' + name +
+            '\". Path on host does not exist \"' + device + '\"'
+        )
+    else:
+        vol['driver_opts'] = {}
+        vol['driver_opts']['device'] = replace_vars(device)
+        vol['driver_opts']['o'] = 'bind'
+        vol['driver_opts']['type'] = 'none'
+        vol['name'] = name
     return vol
 
 
@@ -51,8 +58,12 @@ def add_volume(vol, serv):
         mountpoint = conf['active_volumes'][vol['name']]
     except KeyError:
         mountpoint = conf['active_app']['mountpoint']
-    vol_entry = vol['name'] + ':' + replace_vars(mountpoint)
-    serv['volumes'].append(vol_entry)
+    try:
+        vol_entry = vol['name'] + ':' + replace_vars(mountpoint)
+    except KeyError:
+        pass
+    else:
+        serv['volumes'].append(vol_entry)
     return serv
 
 
@@ -83,7 +94,11 @@ if __name__ == '__main__':
     for s in yd['services']:
         serv = yd['services'][s]
         for v in yd['volumes']:
-            vol = yd['volumes'][v]
-            yd['services'][s] = add_volume(vol, serv)
+            try:
+                vol = yd['volumes'][v]
+            except KeyError:
+                pass
+            else:
+                yd['services'][s] = add_volume(vol, serv)
 
     save_yaml(yd, pj(basedir, 'docker-compose.yaml'))
