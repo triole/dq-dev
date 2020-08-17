@@ -3,7 +3,8 @@
 <!--- mdtoc: toc begin -->
 
 1.	[Synopsis](#synopsis)
-2.	[Configuration](#configuration)<!--- mdtoc: toc end -->
+2.	[Configuration](#configuration)
+3.	[Dependencies](#dependencies)<!--- mdtoc: toc end -->
 
 ## Synopsis
 
@@ -19,3 +20,11 @@ Daiquiri is exposed on port `:9280`.
 ## Configuration
 
 Configuration is basically done in `conf.yaml`. If you want your own local configuration feel free to use a copy of this file. Name it `conf_local.yaml`. The `conf_local.yaml` is read automatically if it exists. It is ignored by git and will avoid problems during pulling.
+
+## Dependencies
+
+A python script is used to render the `docker-compose.yaml`. The script is called by the makefile and requires `pyYAML`. Make sure it is installed. You can use the requirements file for that.
+
+```
+pip install -r requirements.txt
+```
