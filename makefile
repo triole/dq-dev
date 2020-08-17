@@ -1,3 +1,4 @@
+CONF_FILE=$(shell if [ -f conf_local.yaml ]; then echo conf_local.yaml; else echo conf.yaml; fi)
 CURDIR=$(shell pwd)
 DC_MASTER="dc_master.yaml"
 DC_TEMP="docker-compose.yaml"
@@ -22,7 +23,7 @@ log: tail_logs
 yaml: render_yaml
 
 render_yaml:
-	python3 ./py/render_yaml.py
+	python3 ./py/render_yaml.py ${CONF_FILE}
 
 run_build:
 	$(D_CMD) volume rm dq_app || :

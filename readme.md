@@ -2,7 +2,8 @@
 
 <!--- mdtoc: toc begin -->
 
-1.	[Synopsis](#synopsis)<!--- mdtoc: toc end -->
+1.	[Synopsis](#synopsis)
+2.	[Configuration](#configuration)<!--- mdtoc: toc end -->
 
 ## Synopsis
 
@@ -14,3 +15,7 @@ folder and be available in path as they are used to run inside some of the conta
 2.	[sd](https://github.com/chmln/sd)
 
 Daiquiri is exposed on port `:9280`.
+
+## Configuration
+
+Configuration is basically done in `conf.yaml`. If you want your own local configuration feel free to use a copy of this file. Name it `conf_local.yaml`. The `conf_local.yaml` is read automatically if it exists. It is ignored by git and will avoid problems during pulling.

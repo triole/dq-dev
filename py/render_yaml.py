@@ -1,5 +1,7 @@
+import argparse
 import os
 import re
+import sys
 from os.path import join as pj
 
 import yaml
@@ -7,6 +9,14 @@ import yaml
 scriptname = os.path.realpath(__file__)
 scriptdir = '/'.join(scriptname.split('/')[:-1])
 basedir = re.search('.*(?=/)', scriptdir).group(0)
+
+parser = argparse.ArgumentParser(
+    description=os.path.basename(__file__).title() + ': ' +
+    'description of what this is',
+    formatter_class=argparse.RawTextHelpFormatter
+)
+parser.add_argument('config_file', nargs='?', default='conf.yaml', help='config file to read')
+args = parser.parse_args()
 
 
 def read_yaml(filename):
@@ -51,7 +61,12 @@ def replace_vars(str):
 
 
 if __name__ == '__main__':
-    conf = read_yaml(pj(basedir, 'conf.yaml'))
+    conf_file = pj(basedir, args.config_file)
+    if os.path.isfile(conf_file) is False:
+        print('Can not find "' + conf_file + '"')
+        sys.exit(1)
+    print('Read config file ' + conf_file)
+    conf = read_yaml(conf_file)
     yd = read_yaml(pj(scriptdir, 'dc_template.yaml'))
 
     # add volumes to volume list

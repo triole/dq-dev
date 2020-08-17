@@ -2,5 +2,6 @@ tmp/
 vol/
 
 *.local
+conf_local.yaml
 docker-compose.yaml
 notes.md
