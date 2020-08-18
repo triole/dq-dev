@@ -11,7 +11,11 @@ if [[ $(pip3 freeze | grep -Poc "django-daiquiri") == "0" ]]; then
     cd "${DQAPP}"
     python3 manage.py makemigrations
     python3 manage.py migrate
-    python3 manage.py create_admin_user
+
+    # line below disabled
+    # because admin user is created during wordpress installation
+    # python3 manage.py create_admin_user
+
     mkdir -p "${DQAPP}/vendor"
     python3 manage.py download_vendor_files
     python3 manage.py collectstatic

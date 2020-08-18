@@ -26,7 +26,7 @@ render_yaml:
 	python3 ./py/render_yaml.py ${CONF_FILE}
 
 run_build:
-	$(D_CMD) volume rm dq_app || :
+	$(D_CMD) volume rm dq_app >/dev/null 2>&1 || :
 	$(DC_CMD) up --build -d
 
 run_down:
