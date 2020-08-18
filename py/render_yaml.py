@@ -3,9 +3,8 @@ import os
 import re
 import sys
 from os.path import join as pj
-from subprocess import PIPE, Popen
 
-import yaml
+from util import expand_vars, is_git, read_yaml, write_yaml
 
 scriptname = os.path.realpath(__file__)
 scriptdir = '/'.join(scriptname.split('/')[:-1])
@@ -24,119 +23,82 @@ parser.add_argument('config_file', nargs='?', default='conf.yaml', help='config 
 args = parser.parse_args()
 
 
-def is_git(folder):
-    proc = Popen(
-        ['git', '-C', folder, 'remote', '-v'],
-        stdout=PIPE, stderr=PIPE, close_fds=True
-    )
-    (out, err) = proc.communicate()
-    exitcode = proc.wait()
-    if exitcode != 0:
-        return (False, None)
-    out = out.splitlines()[0].decode('utf-8')
-    out = re.search(r'git.*?\s', out).group(0)
-    return (True, out)
-
-
-def read_yaml(filename):
-    with open(filename, 'r') as stream:
-        try:
-            return(yaml.safe_load(stream))
-        except yaml.YAMLError as exc:
-            print(exc)
-
-
-def save_yaml(data, filename):
-    with open(filename, 'w') as outfile:
-        yaml.dump(data, outfile, default_flow_style=False, indent=4)
-
-
-def make_volume(name, device, required_git=False):
-    vol = {}
-    device = replace_vars(device)
-    if os.path.isdir(device) is False:
-        print(
-            'Run without volume \"' + name +
-            '\". Path on host does not exist \"' + device + '\"'
-        )
-    else:
-        if required_git is True:
-            ig = is_git(device)
-            if ig[0] is False:
-                print(
-                    cwarn +
-                    '\nFolder ' + cyel + device + cwarn +
-                    ' does not look like a git repo.\n' +
-                    'Please make sure that it really contains the source of ' +
-                    cyel + name + cend + '\n'
-                )
-                sys.exit(1)
-            else:
-                print(
-                    'App folder ' + cyel + device + cend + ' ' +
-                    'has git url ' + cyel + ig[1] + cend
-                )
-        else:
-            vol['driver_opts'] = {}
-            vol['driver_opts']['device'] = replace_vars(device)
-            vol['driver_opts']['o'] = 'bind'
-            vol['driver_opts']['type'] = 'none'
-            vol['name'] = name
-    return vol
-
-
-def add_volume(vol, serv):
-    try:
-        serv['volumes']
-    except KeyError:
-        serv['volumes'] = []
-    try:
-        mountpoint = conf['active_volumes'][vol['name']]
-    except KeyError:
-        mountpoint = conf['active_app']['mountpoint']
-    try:
-        vol_entry = vol['name'] + ':' + replace_vars(mountpoint)
-    except KeyError:
-        pass
-    else:
-        serv['volumes'].append(vol_entry)
-    return serv
-
-
-def replace_vars(str):
-    return str.replace('<HOME>', os.environ['HOME'])
-
-
-if __name__ == '__main__':
+def read_config():
     conf_file = pj(basedir, args.config_file)
     if os.path.isfile(conf_file) is False:
         print('Can not find "' + conf_file + '"')
         sys.exit(1)
     print('Read config file ' + cyel + conf_file + cend)
     conf = read_yaml(conf_file)
-    yd = read_yaml(pj(scriptdir, 'dc_template.yaml'))
+    return conf
 
-    # add volumes to volume list
-    yd['volumes'] = {}
-    for volname in conf['active_volumes']:
-        volpath = conf['active_volumes'][volname]
-        yd['volumes'][volname] = make_volume(volname, conf['folders'][volname])
 
-    yd['volumes']['dq_app'] = make_volume(
-        'dq_app',
-        conf['folders'][conf['active_app']['name']],
-        required_git=True,
-    )
+def gather_volumes(conf):
+    vols = []
+    for volname in conf['docker_volume_mountpoints']:
+        vol = {}
+        vol['driver_opts'] = {}
+        vol['driver_opts']['o'] = 'bind'
+        vol['driver_opts']['type'] = 'none'
+        vol['mp'] = conf['docker_volume_mountpoints'][volname]
+        vol['required_git'] = volname.startswith('dq_')
+        if volname == 'dq_app':
+            volname = conf['active_app']
+        vol['name'] = volname
+        vol['driver_opts']['device'] = expand_vars(
+            conf['folders_on_host'][volname]
+        )
+        vols.append(vol)
+    return vols
 
-    # add volumes to services
-    for s in yd['services']:
-        serv = yd['services'][s]
-        for v in yd['volumes']:
-            try:
-                vol = yd['volumes'][v]
-            except KeyError:
-                pass
-            else:
-                yd['services'][s] = add_volume(vol, serv)
 
-    save_yaml(yd, pj(basedir, 'docker-compose.yaml'))
+def valid_volume(invol, required_git=False):
+    r = False
+    dev = invol['driver_opts']['device']
+    is_dir = os.path.isdir(dev)
+
+    if is_dir is False and required_git is False:
+        print(
+            'Run without volume \"' + invol['name'] +
+            '\". Path on host does not exist \"' + dev + '\"'
+        )
+
+    if is_dir is True:
+        r = True
+
+    if required_git is True:
+        ig = is_git(dev)
+        if ig[0] is False:
+            print(
+                cwarn +
+                '\nFolder ' + cyel + dev + cwarn +
+                ' does not look like a git repo.\n' +
+                'Please make sure that it really contains the source of ' +
+                cyel + invol['name'] + cend + '\n'
+            )
+            sys.exit(1)
+        else:
+            r = True
+    return r
+
+
+if __name__ == '__main__':
+    conf = read_config()
+    dyaml = read_yaml(pj(scriptdir, 'dc_template.yaml'))
+    volumes = gather_volumes(conf)
+
+    dyaml['volumes'] = {}
+    for vol in volumes:
+        t = {}
+        t['driver_opts'] = vol['driver_opts']
+        dyaml['volumes'][vol['name']] = t
+
+    for ser in dyaml['services']:
+        dyaml['services'][ser]['volumes'] = []
+        for vol in volumes:
+            if valid_volume(vol, required_git=vol['required_git']) is True:
+                dyaml['services'][ser]['volumes'].append(
+                    vol['name'] + ':' + vol['mp']
+                )
+
+    write_yaml(dyaml, pj(basedir, 'docker-compose.yaml'))

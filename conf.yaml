@@ -1,19 +1,21 @@
-active_app:
-    name: xmmssc
-    mountpoint: /home/dq/app
+# the folder of the app's source code is looked up
+# in the 'folders_on_host' entry below
+active_app: applause
 
-active_volumes:
+docker_volume_mountpoints:
     dq_source: /home/dq/source
+    dq_app: /home/dq/app
     shed: /vol/tools/shed
     testdata: /vol/testdata
 
-folders:
-    # apps
+folders_on_host:
+    # daiquiri source repo
+    dq_source: <HOME>/rolling/aip/github/daiquiri
+    # possible app repos
     applause: <HOME>/rolling/aip/gitlab/applause-app
     daiquiri: <HOME>/rolling/aip/github/daiquiri-app
     rave: <HOME>/rolling/aip/gitlab/rave-app
-    xmmssc: <HOME>/rolling/aip/gitlab/xmmssc-app/
-    # other
-    dq_source: <HOME>/rolling/aip/github/daiquiri
+    xmmssc: <HOME>/rolling/aip/gitlab/xmmssc-app
+    # others
     shed: <HOME>/tools/shed
-    testdata: <HOME>/rolling/aip/self/app-testdata-importer/
+    testdata: <HOME>/rolling/aip/self/app-testdata-importer
