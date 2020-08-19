@@ -29,7 +29,7 @@ define('PLUGINS_COOKIE_PATH', COOKIEPATH);
 
 define('WP_HOME', 'http://localhost:<EXPOSED_PORT>/cms' );
 define('WP_SITEURL', 'http://localhost:<EXPOSED_PORT>/cms');
-define('DAIQUIRI_URL', 'http://localhost:80');
+define('DAIQUIRI_URL', 'http://localhost:<EXPOSED_PORT>');
 
 /**#@+
  * Authentication Unique Keys and Salts.

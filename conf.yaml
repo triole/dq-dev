@@ -23,7 +23,6 @@ docker_volume_mountpoints:
 # db ports do not have to be exposed, but it's nice for test and development
 exposed_ports:
     daiquiri:
-        - 80:80
         - 9280:9280
     pgapp:
         # - 9281:5432
