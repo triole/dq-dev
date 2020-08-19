@@ -22,6 +22,7 @@ fi
 # render wordpress config
 cat "${HOME}/tpl/wp-config.php" |
     sed "s|<SITE_URL>|${SITE_URL}|g" |
+    sed "s|<EXPOSED_PORT>|${EXPOSED_PORT}|g" |
     sed "s|<HTTP_HOST>|${HTTP_HOST}|g" |
     sed "s|<GLOBAL_PREFIX>|${GLOBAL_PREFIX}|g" |
     sed "s|<WORDPRESS_URL>|${WORDPRESS_URL}|g" |
@@ -29,7 +30,7 @@ cat "${HOME}/tpl/wp-config.php" |
     sed "s|<WORDPRESS_DB_USER>|${WORDPRESS_DB_USER}|g" |
     sed "s|<WORDPRESS_DB_HOST>|${WORDPRESS_DB_HOST}|g" |
     sed "s|<WORDPRESS_DB_PASSWORD>|${WORDPRESS_DB_PASSWORD}|g" \
-        >"${HOME}/wp/wp-config.php"
+        >"${WORDPRESS_PATH}/wp-config.php"
 
 ${HOME}/sh/init-wordpress.sh
 
