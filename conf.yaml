@@ -24,7 +24,6 @@ docker_volume_mountpoints:
 exposed_ports:
     daiquiri:
         - 9280:9280
-        - 80:80
     pgapp:
         # - 9281:5432
     pgdata:

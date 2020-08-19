@@ -8,3 +8,6 @@ wp core install \
     --admin_email=admin@dqdev.de \
     --admin_password=admin \
     --skip-email
+
+wp plugin activate --path=${WORDPRESS_PATH} daiquiri
+wp theme activate --path=${WORDPRESS_PATH} daiquiri
