@@ -9,7 +9,7 @@ cd "${DQAPP}" || exit 1
 
 # install custom and fixture app scripts if there
 if [ -f "${DQAPP}/install-custom.sh" ]; then
-    echo "Running ${DQAPP} custom installation and fixture script..."
+    echo "Run ${DQAPP} custom installation and fixture script..."
     ${DQAPP}/install-custom.sh
 fi
 
@@ -19,18 +19,9 @@ if [[ ! -f "${tfil}" ]]; then
     copy -f "${sfil}" "${tfil}"
 fi
 
-# render wordpress config
-cat "${HOME}/tpl/wp-config.php" |
-    sed "s|<SITE_URL>|${SITE_URL}|g" |
-    sed "s|<EXPOSED_PORT>|${EXPOSED_PORT}|g" |
-    sed "s|<HTTP_HOST>|${HTTP_HOST}|g" |
-    sed "s|<GLOBAL_PREFIX>|${GLOBAL_PREFIX}|g" |
-    sed "s|<WORDPRESS_URL>|${WORDPRESS_URL}|g" |
-    sed "s|<WORDPRESS_DB_NAME>|${WORDPRESS_DB_NAME}|g" |
-    sed "s|<WORDPRESS_DB_USER>|${WORDPRESS_DB_USER}|g" |
-    sed "s|<WORDPRESS_DB_HOST>|${WORDPRESS_DB_HOST}|g" |
-    sed "s|<WORDPRESS_DB_PASSWORD>|${WORDPRESS_DB_PASSWORD}|g" \
-        >"${WORDPRESS_PATH}/wp-config.php"
+# render config files
+${HOME}/sh/expand-env-vars.sh \
+    "${HOME}/tpl/wp-config.php" "${WORDPRESS_PATH}/wp-config.php"
 
 ${HOME}/sh/init-wordpress.sh
 
