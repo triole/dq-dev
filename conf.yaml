@@ -1,6 +1,6 @@
 # the folder of the app's source code is looked up
 # in the 'folders_on_host' entry below
-active_app: applause
+active_app: daiquiri
 
 folders_on_host:
     # daiquiri source repo
@@ -20,13 +20,14 @@ docker_volume_mountpoints:
     shed: /vol/tools/shed
     testdata: /vol/testdata
 
+# db ports do not have to be exposed but it is nice for development
 exposed_ports:
     daiquiri:
-        - 9222:9280
+        - 9280:9280
         - 80:80
     pgapp:
-        - 9281:5432
+        # - 9281:5432
     pgdata:
-        - 9282:5432
+        # - 9282:5432
     wpdb:
-        - 9283:3306
+        # - 9283:3306
