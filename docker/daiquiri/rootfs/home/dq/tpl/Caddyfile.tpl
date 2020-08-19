@@ -1,35 +1,33 @@
 {
     debug
-    http_port 9280
+    http_port <EXPOSED_PORT>
     http_port 80
     auto_https disable_redirects
 }
 
 :80 {
-    reverse_proxy * :9280
+    reverse_proxy * :<EXPOSED_PORT>
 }
 
-:9280 {
+:<EXPOSED_PORT> {
     reverse_proxy * :8000
     header ForwardTo dqserv
 }
 
-:9280/dqurl* {
+:<EXPOSED_PORT>/dqurl* {
     uri strip_prefix /dqurl
     reverse_proxy * 127.0.0.1:80
 }
 
-:9280/static* {
+:<EXPOSED_PORT>/static* {
     uri strip_prefix /static
     rewrite /static/ /
 
     file_server
-    root * /home/dq/app/static_root
-
-    header ForwardTo Static
+    root * <DQAPP>/static_root
 }
 
-:9280/cms* {
+:<EXPOSED_PORT>/cms* {
     redir /cms/admin /cms/admin/
     redir /cms/admin/ /cms/wp-admin/
 
@@ -38,11 +36,9 @@
     rewrite /cms/ /
 
     file_server
-    root * /home/dq/wp
+    root * <WORDPRESS_PATH>
 
     # socket for production, port for debug
     php_fastcgi unix//run/php/php.sock
     # php_fastcgi 127.0.0.1:9000
-
-    header ForwardTo wordpress
 }

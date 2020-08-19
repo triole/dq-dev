@@ -23,6 +23,9 @@ fi
 ${HOME}/sh/expand-env-vars.sh \
     "${HOME}/tpl/wp-config.php" "${WORDPRESS_PATH}/wp-config.php"
 
+${HOME}/sh/expand-env-vars.sh \
+    "${HOME}/tpl/Caddyfile.tpl" "${HOME}/Caddyfile"
+
 ${HOME}/sh/init-wordpress.sh
 
 cd "${DQAPP}"
