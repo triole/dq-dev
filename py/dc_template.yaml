@@ -7,9 +7,6 @@ services:
         container_name: dqdev-daiquiri
         depends_on:
             - pgapp
-        ports:
-            - "9280:9280"
-            - "80:80"
         links:
             - pgdata
             - wpdb
@@ -21,8 +18,6 @@ services:
         build:
             context: ./docker/pgapp
         container_name: dqdev-pgapp
-        ports:
-            - "9281:5432"
         restart: always
         env_file:
             - ./docker/pgapp/.env
@@ -31,8 +26,6 @@ services:
         build:
             context: ./docker/pgdata
         container_name: dqdev-pgdata
-        ports:
-            - "9282:5432"
         restart: always
         env_file:
             - ./docker/pgdata/.env
@@ -41,8 +34,6 @@ services:
         build:
             context: ./docker/wpdb
         container_name: dqdev-wpdb
-        ports:
-            - "9283:3306"
         restart: always
         env_file:
             - ./docker/wpdb/.env

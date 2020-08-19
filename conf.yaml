@@ -2,12 +2,6 @@
 # in the 'folders_on_host' entry below
 active_app: applause
 
-docker_volume_mountpoints:
-    dq_source: /home/dq/source
-    dq_app: /home/dq/app
-    shed: /vol/tools/shed
-    testdata: /vol/testdata
-
 folders_on_host:
     # daiquiri source repo
     dq_source: <HOME>/rolling/aip/github/daiquiri
@@ -19,3 +13,20 @@ folders_on_host:
     # others
     shed: <HOME>/tools/shed
     testdata: <HOME>/rolling/aip/self/app-testdata-importer
+
+docker_volume_mountpoints:
+    dq_source: /home/dq/source
+    dq_app: /home/dq/app
+    shed: /vol/tools/shed
+    testdata: /vol/testdata
+
+exposed_ports:
+    daiquiri:
+        - 9222:9280
+        - 80:80
+    pgapp:
+        - 9281:5432
+    pgdata:
+        - 9282:5432
+    wpdb:
+        - 9283:3306
