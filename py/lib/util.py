@@ -5,6 +5,12 @@ from subprocess import PIPE, Popen
 import yaml
 
 
+def appendx(val, arr):
+    if val not in arr:
+        arr.append(val)
+    return arr
+
+
 def expand_vars(str):
     return str.replace('<HOME>', os.environ['HOME'])
 

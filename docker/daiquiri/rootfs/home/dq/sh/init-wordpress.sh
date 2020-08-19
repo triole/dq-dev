@@ -2,7 +2,7 @@
 
 wp core install \
     --path=${WORDPRESS_PATH} \
-    --url="http://localhost:9280${WORDPRESS_URL}" \
+    --url="http://localhost:${EXPOSED_PORT}${WORDPRESS_URL}" \
     --title="${WORDPRESS_TITLE}" \
     --admin_user=admin \
     --admin_email=admin@dqdev.de \

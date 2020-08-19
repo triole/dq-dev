@@ -5,7 +5,7 @@ import sys
 from os.path import join as pj
 
 from lib.env import gather_env
-from lib.util import expand_vars, is_git, read_yaml, write_yaml
+from lib.util import appendx, expand_vars, is_git, read_yaml, write_yaml
 from lib.port import gather_ports
 from lib.volume import gather_volumes, valid_volume
 
@@ -35,10 +35,6 @@ def read_config():
     conf = read_yaml(conf_file)
     return conf
 
-def appendx(val, arr):
-    if val not in arr:
-        arr.append(val)
-    return arr
 
 if __name__ == '__main__':
     conf = read_config()
