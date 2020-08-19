@@ -2,6 +2,7 @@
 
 source "${HOME}/.bashrc"
 
+${HOME}/sh/install-caddy.sh
 ${HOME}/sh/install-daiquiri.sh
 
 cd "${DQAPP}" || exit 1
@@ -43,8 +44,6 @@ if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
     #     --workers 2 \
     #     config.wsgi:application -D
 fi
-
-${HOME}/sh/install-caddy.sh
 
 sudo /usr/sbin/php-fpm7.3
 sudo caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch
