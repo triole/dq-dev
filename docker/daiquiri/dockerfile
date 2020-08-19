@@ -6,9 +6,9 @@ ENV GNAME=dq
 ENV GID=1000
 ENV HOME=/home/dq
 
-ENV PATH=${PATH}:/home/dq/sh:/home/dq/.local/bin:/vol/tools/shed:${HOME}/bin:${HOME}/sh
+ENV PATH=${PATH}:/home/dq/sh:/home/dq/.local/bin:${HOME}/bin:${HOME}/sh:/vol/tools/shed
 ENV PHP_CONF=/etc/php/7.3/fpm/pool.d/www.conf
-ENV WORDPRESS_PATH=/home/dq/wp/
+ENV WORDPRESS_PATH=/home/dq/wp
 
 RUN apt update -y && apt install -y \
     curl \

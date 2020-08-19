@@ -2,8 +2,8 @@
 
 wp core install \
     --path=${WORDPRESS_PATH} \
-    --url="http://localhost:9280/cms" \
-    --title="dqdev" \
+    --url="http://localhost:9280${WORDPRESS_URL}" \
+    --title="${WORDPRESS_TITLE}" \
     --admin_user=admin \
     --admin_email=admin@dqdev.de \
     --admin_password=admin \

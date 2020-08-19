@@ -20,9 +20,10 @@ docker_volume_mountpoints:
     shed: /vol/tools/shed
     testdata: /vol/testdata
 
-# db ports do not have to be exposed but it is nice for development
+# db ports do not have to be exposed, but it's nice for test and development
 exposed_ports:
     daiquiri:
+        - 80:80
         - 9280:9280
     pgapp:
         # - 9281:5432
@@ -30,3 +31,49 @@ exposed_ports:
         # - 9282:5432
     wpdb:
         # - 9283:3306
+
+# the container's environment variables for configuration
+env:
+    daiquiri:
+        - WORDPRESS_TITLE=dqdev
+        - WORDPRESS_URL=/cms/
+        - WORDPRESS_CLI=/usr/bin/wp
+        - WORDPRESS_DB_HOST=dqdev-wpdb:3306
+        - WORDPRESS_DB_USER=wordpress
+        - WORDPRESS_DB_NAME=wordpress
+        - WORDPRESS_DB_PASSWORD=wordpress
+        - WORDPRESS_TABLE_PREFIX=wp_
+        - DATABASE_APP=postgresql://daiquiri_app:daiquiri_app@dqdev-pgapp/daiquiri_app
+        - DATABASE_DATA=postgresql://daiquiri_data:daiquiri_data@dqdev-pgdata/daiquiri_data
+        - ALLOWED_HOSTS=*
+        - SECRET_KEY=verysecretkey
+        - DEBUG=True
+        - ASYNC=False
+        - ACCOUNT_EMAIL_VERIFICATION=optional
+        - ARCHIVE_BASE_PATH=/tmp/files
+        - ARCHIVE_DOWNLOAD_DIR=/tmp/download
+        - FILES_BASE_PATH=/tmp/files
+        - QUERY_DOWNLOAD_DIR=/tmp/download
+        - QUERY_UPLOAD_DIR=/tmp/upload
+
+    pgapp:
+        - POSTGRES_HOST=pgapp
+        - POSTGRES_PORT=5432
+        - POSTGRES_DB=daiquiri_app
+        - POSTGRES_USER=daiquiri_app
+        - POSTGRES_PASSWORD=daiquiri_app
+
+    pgdata:
+        - POSTGRES_HOST=pgdata
+        - POSTGRES_PORT=5432
+        - POSTGRES_DB=daiquiri_data
+        - POSTGRES_USER=daiquiri_data
+        - POSTGRES_PASSWORD=daiquiri_data
+
+    wpdb:
+        - MYSQL_ROOT_PASSWORD=somewordpress
+        - MYSQL_DATABASE=wordpress
+        - MYSQL_USER=wordpress
+        - MYSQL_PASSWORD=wordpress
+        - MYSQL_PORT=3306
+        - MYSQL_HOSTNAME=dq-wpdb

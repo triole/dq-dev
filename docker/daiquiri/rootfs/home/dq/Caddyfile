@@ -11,7 +11,7 @@
 
 :9280 {
     reverse_proxy * :8000
-    header ForwardTo Gunicorn
+    header ForwardTo dqserv
 }
 
 :9280/static* {

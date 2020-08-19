@@ -11,29 +11,21 @@ services:
             - pgdata
             - wpdb
         restart: always
-        env_file:
-            - ./docker/daiquiri/.env
 
     pgapp:
         build:
             context: ./docker/pgapp
         container_name: dqdev-pgapp
         restart: always
-        env_file:
-            - ./docker/pgapp/.env
 
     pgdata:
         build:
             context: ./docker/pgdata
         container_name: dqdev-pgdata
         restart: always
-        env_file:
-            - ./docker/pgdata/.env
 
     wpdb:
         build:
             context: ./docker/wpdb
         container_name: dqdev-wpdb
         restart: always
-        env_file:
-            - ./docker/wpdb/.env

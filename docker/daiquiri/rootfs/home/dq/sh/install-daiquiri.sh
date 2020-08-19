@@ -1,7 +1,6 @@
 #!/bin/bash
 
 scriptdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${scriptdir}/source.sh"
 
 if [[ $(pip3 freeze | grep -Poc "django-daiquiri") == "0" ]]; then
 

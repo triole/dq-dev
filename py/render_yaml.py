@@ -4,6 +4,7 @@ import re
 import sys
 from os.path import join as pj
 
+from lib.env import gather_env
 from lib.util import expand_vars, is_git, read_yaml, write_yaml
 from lib.port import gather_ports
 from lib.volume import gather_volumes, valid_volume
@@ -34,10 +35,16 @@ def read_config():
     conf = read_yaml(conf_file)
     return conf
 
+def appendx(val, arr):
+    if val not in arr:
+        arr.append(val)
+    return arr
 
 if __name__ == '__main__':
     conf = read_config()
     dyaml = read_yaml(pj(scriptdir, 'dc_template.yaml'))
+
+    env = gather_env(conf)
     ports = gather_ports(conf)
     volumes = gather_volumes(conf)
 
@@ -48,14 +55,36 @@ if __name__ == '__main__':
         dyaml['volumes'][vol['name']] = t
 
     for ser in dyaml['services']:
+        dyaml['services'][ser]['environment'] = []
+        for e in env:
+            try:
+                f = env[ser]
+            except KeyError:
+                pass
+            else:
+                dyaml['services'][ser]['environment'] = f
+
+        for p in ports:
+            dyaml['services'][p]['ports'] = ports[p]
+
         dyaml['services'][ser]['volumes'] = []
         for vol in volumes:
             if valid_volume(vol, required_git=vol['required_git']) is True:
+
                 dyaml['services'][ser]['volumes'].append(
                     vol['name'] + ':' + vol['mp']
                 )
 
-        for p in ports:
-            dyaml['services'][p]['ports'] = ports[p]
+                if vol['required_git'] is True and vol['name'] == 'dq_source':
+                    dyaml['services']['daiquiri']['environment'] = appendx(
+                        'DQSOURCE=' + vol['mp'],
+                        dyaml['services']['daiquiri']['environment']
+                    )
+
+                if vol['required_git'] is True and vol['name'] != 'dq_source':
+                    dyaml['services']['daiquiri']['environment'] = appendx(
+                        'DQAPP=' + vol['mp'],
+                        dyaml['services']['daiquiri']['environment']
+                    )
 
     write_yaml(dyaml, pj(basedir, 'docker-compose.yaml'))
