@@ -24,7 +24,6 @@ RUN apt update -y && apt install -y \
     python3-psycopg2 \
     net-tools \
     procps \
-    sudo \
     vim
 RUN pear install http_request2
 
@@ -56,12 +55,17 @@ RUN groupadd -g "${GID}" "${GNAME}" \
  && useradd -m -s /bin/bash -g "${GNAME}" -u "${UID}" "${USER}" \
  && adduser "${USER}" "sudo" \
  && chown -R "${USER}:${GID}" "${HOME}" \
- && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd \
- && chmod -R 777 /tmp
+ && chmod -R 777 /tmp /var/log
+
+RUN mkdir -p /run/php \
+ && chown -R ${USER}:${USER} /run/php/
+RUN sed -i "s/user = .*/user = dq/g" /etc/php/7.3/fpm/pool.d/www.conf \
+ && sed -i "s/group = .*/group = dq/g" /etc/php/7.3/fpm/pool.d/www.conf \
+ && sed -i "s/listen.owner = .*/listen.owner = dq/g" /etc/php/7.3/fpm/pool.d/www.conf
 
 USER ${USER}
 
-HEALTHCHECK --timeout=5s --interval=60s --retries=3 \
+HEALTHCHECK --timeout=3s --interval=2s --retries=3 \
    CMD pgrep php-fpm && pgrep caddy && curl http://localhost
 
 CMD ["/drun.sh"]

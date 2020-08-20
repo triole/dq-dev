@@ -40,5 +40,5 @@ if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
     #     config.wsgi:application -D
 fi
 
-sudo /usr/sbin/php-fpm7.3
-sudo caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch
+/usr/sbin/php-fpm7.3
+caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch

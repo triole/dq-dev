@@ -1,22 +1,11 @@
 {
     debug
     http_port <EXPOSED_PORT>
-    http_port 80
     auto_https disable_redirects
-}
-
-:80 {
-    reverse_proxy * :<EXPOSED_PORT>
 }
 
 :<EXPOSED_PORT> {
     reverse_proxy * :8000
-    header ForwardTo dqserv
-}
-
-:<EXPOSED_PORT>/dqurl* {
-    uri strip_prefix /dqurl
-    reverse_proxy * 127.0.0.1:80
 }
 
 :<EXPOSED_PORT>/static* {
