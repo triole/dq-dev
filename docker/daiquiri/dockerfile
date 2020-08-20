@@ -65,7 +65,7 @@ RUN sed -i "s/user = .*/user = dq/g" /etc/php/7.3/fpm/pool.d/www.conf \
 
 USER ${USER}
 
-HEALTHCHECK --timeout=3s --interval=2s --retries=3 \
+HEALTHCHECK --timeout=3s --interval=60s --retries=3 \
    CMD pgrep php-fpm && pgrep caddy && curl http://localhost
 
 CMD ["/drun.sh"]
