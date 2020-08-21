@@ -1,4 +1,5 @@
-from lib.util import appendx
+from py.lib.util import appendx
+
 
 def gather_env(conf):
     env = {}

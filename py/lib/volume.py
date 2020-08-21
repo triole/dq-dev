@@ -1,5 +1,7 @@
 import os
-from lib.util import expand_vars, is_git
+
+from py.lib.util import expand_vars, is_git
+
 
 def gather_volumes(conf):
     vols = []

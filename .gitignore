@@ -1,7 +1,10 @@
+.pytest_cache/
 __pycache__/
 tmp/
+usr/
 vol/
 
+profile.yaml
 *.local
 conf_local.yaml
 docker-compose.yaml
