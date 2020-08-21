@@ -41,6 +41,9 @@ class DCYaml():
             self.dyaml['volumes'][vol['name']] = t
 
         for ser in self.dyaml['services']:
+            self.dyaml['services'][ser]['container_name'] =\
+                self.dyaml['services'][ser]['container_name'] + '_' + gp['name']
+
             self.dyaml['services'][ser]['environment'] = []
             for e in env:
                 try:

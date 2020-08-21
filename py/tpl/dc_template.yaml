@@ -4,7 +4,7 @@ services:
     daiquiri:
         build:
             context: ../../../docker/daiquiri
-        container_name: dqdev-daiquiri
+        container_name: dqdev-daiq
         depends_on:
             - pgapp
         links:
