@@ -48,6 +48,11 @@ def is_git(folder):
     return (True, out)
 
 
+def mkdir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+
 def read_yaml(filename):
     with open(filename, 'r') as stream:
         try:

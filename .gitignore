@@ -4,7 +4,7 @@ tmp/
 usr/
 vol/
 
-profile.yaml
+profile_conf.yaml
 *.local
 conf_local.yaml
 docker-compose.yaml

@@ -1,8 +1,11 @@
 import sys
+from os.path import exists as ex
 from os.path import join as pj
+from shutil import copyfile as cp
 
 from py.lib.colours import Colours
-from py.lib.util import find, path_up_to_last_slash, read_yaml, write_yaml
+from py.lib.util import (find, mkdir, path_up_to_last_slash, read_yaml,
+                         write_yaml)
 
 
 class Profile():
@@ -10,33 +13,48 @@ class Profile():
         self.conf = conf
         self.c = Colours()
 
-    def active_profile(self):
+    def active_name(self):
         y = read_yaml(self.conf['prof_conf'])
-        return y['active_profile']
+        return y['active_profile_name']
 
-    def set_profile(self, str):
+    def create(self, str):
+        tfol = pj(self.conf['prof_basedir'], str)
+        if ex(tfol) is True:
+            print(
+                'Profile ' + self.c.yel(str) + ' already seems to exist. ' +
+                'Please check ' + self.c.yel(self.conf['prof_basedir'])
+            )
+        else:
+            mkdir(tfol)
+            cp(self.conf['conf_template'], pj(tfol, 'conf.yaml'))
+            print(
+                'Fresh profile ' + self.c.yel(str) + ' created inside of folder ' +
+                self.c.yel(tfol)
+            )
+
+    def set(self, str):
         p = {}
-        p['active_profile'] = str
+        p['active_profile_name'] = str
         write_yaml(p, self.conf['prof_conf'])
 
-    def get_profile(self):
-        n = self.active_profile()
+    def get(self):
+        n = self.active_name()
         r = {}
         f = find(
-            self.conf['prof_dir'],
+            self.conf['prof_basedir'],
             n + r'.*.yaml$',
             'f'
         )
         if len(f) < 1:
             print(
                 'Set profile ' + self.c.yel(n) + ' does not seem to exist. ' +
-                'Please check ' + self.c.yel(self.conf['prof_dir'])
+                'Please check ' + self.c.yel(self.conf['prof_basedir'])
             )
             sys.exit(1)
         if len(f) > 1:
             print(
                 'Multiple profiles matched. ' +
-                'Please check ' + self.conf['prof_dir']
+                'Please check ' + self.conf['prof_basedir']
             )
             sys.exit(1)
         r['name'] = n

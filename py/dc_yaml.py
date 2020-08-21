@@ -17,7 +17,7 @@ class DCYaml():
         self.dyaml['volumes'] = {}
 
     def read_config(self):
-        gp = self.prof.get_profile()
+        gp = self.prof.get()
         yaml = gp['yaml']
         if os.path.isfile(yaml) is False:
             print('Can not find "' + yaml + '"')
@@ -28,7 +28,7 @@ class DCYaml():
 
     def render_dc_yaml(self, dry_run):
         conf = self.read_config()
-        gp = self.prof.get_profile()
+        gp = self.prof.get()
         print('Render dc yaml to ' + self.c.yel(gp['dc_target']))
 
         env = gather_env(conf)

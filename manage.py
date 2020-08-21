@@ -5,13 +5,17 @@ from os.path import join as pj
 
 from py.dc_yaml import DCYaml
 from py.lib.colours import Colours
-from py.lib.util import pprint
+from py.lib.util import mkdir, pprint
 from py.profile import Profile
 
 parser = argparse.ArgumentParser(
     description=os.path.basename(__file__).title() + ': ' +
     'description of what this is',
     formatter_class=argparse.RawTextHelpFormatter
+)
+parser.add_argument(
+    '-c', '--create_profile', type=str, default=None,
+    help='create a new profile with the default settings'
 )
 parser.add_argument(
     '-s', '--set_profile', type=str, default=None,
@@ -36,10 +40,14 @@ def init():
     conf = {}
     n = os.path.realpath(__file__)
     basedir = '/'.join(n.split('/')[:-1])
+    conf['prof_conf_name'] = 'profile_conf.yaml'
     conf['basedir'] = basedir
-    conf['prof_conf'] = pj(basedir, 'conf.yaml')
-    conf['prof_dir'] = pj(basedir, 'usr', 'profiles')
+    conf['prof_conf'] = pj(basedir, conf['prof_conf_name'])
+    conf['prof_basedir'] = pj(basedir, 'usr', 'profiles')
+    conf['conf_template'] = pj(basedir, 'py', 'tpl', 'conf.yaml')
     conf['dc_template'] = pj(basedir, 'py', 'tpl', 'dc_template.yaml')
+    conf['prof_basedir'] = pj(basedir, 'usr', 'profiles')
+    mkdir(conf['prof_basedir'])
     return conf
 
 
@@ -49,11 +57,14 @@ if __name__ == '__main__':
     prof = Profile(conf)
     dcy = DCYaml(conf, prof)
 
+    if args.create_profile is not None:
+        prof.create(args.create_profile)
+
     if args.set_profile is not None:
-        prof.set_profile(args.set_profile)
+        prof.set(args.set_profile)
 
     if args.get_profile is True:
-        p = prof.get_profile()
+        p = prof.get()
         print(col.yel('Currently set profile'))
         pprint(p)
 
