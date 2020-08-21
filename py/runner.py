@@ -9,10 +9,11 @@ class Runner():
     def __init__(self, conf, debug=True):
         self.c = Colours()
         self.conf = conf
+        self.debug = debug
 
-    def run_cmd_fg(self, cmd, debug=False):
+    def run_cmd_fg(self, cmd):
         print(self.c.mag(cmd))
-        if debug is False:
+        if self.debug is False:
             os.system(cmd)
 
     def sudo(self):

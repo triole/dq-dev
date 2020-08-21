@@ -81,7 +81,7 @@ if __name__ == '__main__':
         dcy.render_dc_yaml(args.dry_run)
 
     if args.run is True:
-        run = Runner(prof.get())
+        run = Runner(prof.get(), args.dry_run)
         run.start()
 
     if args.tail_logs is True:
