@@ -16,7 +16,7 @@ class DCYaml():
         self.dyaml = read_yaml(self.conf['dc_template'])
         self.dyaml['volumes'] = {}
 
-    def read_config(self):
+    def get_yaml_template(self):
         gp = self.prof.get()
         yaml = gp['yaml']
         if os.path.isfile(yaml) is False:
@@ -27,9 +27,9 @@ class DCYaml():
         return conf
 
     def render_dc_yaml(self, dry_run):
-        conf = self.read_config()
+        conf = self.get_yaml_template()
         gp = self.prof.get()
-        print('Render dc yaml to ' + self.c.yel(gp['dc_target']))
+        print('Render dc yaml to ' + self.c.yel(gp['dc_yaml']))
 
         env = gather_env(conf)
         ports = gather_ports(conf)
@@ -77,4 +77,4 @@ class DCYaml():
             print(self.c.yel('\nDry run, dc yaml would look like this:'))
             pprint(self.dyaml)
         else:
-            write_yaml(self.dyaml, gp['dc_target'])
+            write_yaml(self.dyaml, gp['dc_yaml'])

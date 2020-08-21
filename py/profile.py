@@ -21,8 +21,8 @@ class Profile():
         tfol = pj(self.conf['prof_basedir'], str)
         if ex(tfol) is True:
             print(
-                'Profile ' + self.c.yel(str) + ' already seems to exist. ' +
-                'Please check ' + self.c.yel(self.conf['prof_basedir'])
+                'Please check ' + self.c.yel(self.conf['prof_basedir']) +
+                'Profile ' + self.c.yel(str) + ' already seems to exist. '
             )
         else:
             mkdir(tfol)
@@ -42,23 +42,25 @@ class Profile():
         r = {}
         f = find(
             self.conf['prof_basedir'],
-            n + r'.*.yaml$',
+            n + r'.*conf.yaml$',
             'f'
         )
         if len(f) < 1:
             print(
-                'Set profile ' + self.c.yel(n) + ' does not seem to exist. ' +
-                'Please check ' + self.c.yel(self.conf['prof_basedir'])
+                'Please check ' + self.c.yel(self.conf['prof_basedir']) +
+                'Set profile ' + self.c.yel(n) + ' does not seem to exist. '
             )
             sys.exit(1)
         if len(f) > 1:
             print(
-                'Multiple profiles matched. ' +
-                'Please check ' + self.conf['prof_basedir']
+                'Please check ' + self.c.yel(self.conf['prof_basedir']) +
+                '\nMultiple profiles matched: '
             )
+            for el in f:
+                print('\t' + el)
             sys.exit(1)
         r['name'] = n
         r['yaml'] = f[0]
         r['folder'] = path_up_to_last_slash(f[0])
-        r['dc_target'] = pj(r['folder'], 'docker-compose.yaml')
+        r['dc_yaml'] = pj(r['folder'], 'docker-compose.yaml')
         return r

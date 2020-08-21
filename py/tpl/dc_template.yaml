@@ -3,7 +3,7 @@ version: "3.7"
 services:
     daiquiri:
         build:
-            context: ./docker/daiquiri
+            context: ../../../docker/daiquiri
         container_name: dqdev-daiquiri
         depends_on:
             - pgapp
@@ -14,18 +14,18 @@ services:
 
     pgapp:
         build:
-            context: ./docker/pgapp
+            context: ../../../docker/pgapp
         container_name: dqdev-pgapp
         restart: always
 
     pgdata:
         build:
-            context: ./docker/pgdata
+            context: ../../../docker/pgdata
         container_name: dqdev-pgdata
         restart: always
 
     wpdb:
         build:
-            context: ./docker/wpdb
+            context: ../../../docker/wpdb
         container_name: dqdev-wpdb
         restart: always

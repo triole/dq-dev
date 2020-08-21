@@ -7,3 +7,6 @@ class Colours():
 
     def yel(self, s):
         return '\033[93m' + s + self.end
+
+    def mag(self, s):
+        return '\033[95m' + s + self.end

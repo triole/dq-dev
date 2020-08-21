@@ -7,11 +7,20 @@ from py.dc_yaml import DCYaml
 from py.lib.colours import Colours
 from py.lib.util import mkdir, pprint
 from py.profile import Profile
+from py.runner import Runner
 
 parser = argparse.ArgumentParser(
     description=os.path.basename(__file__).title() + ': ' +
     'description of what this is',
     formatter_class=argparse.RawTextHelpFormatter
+)
+parser.add_argument(
+    '-r', '--run', action='store_true', default=False,
+    help='run currently active profile\'s containers'
+)
+parser.add_argument(
+    '-l', '--tail_logs', action='store_true', default=False,
+    help='tail docker compose logs'
 )
 parser.add_argument(
     '-c', '--create_profile', type=str, default=None,
@@ -26,7 +35,7 @@ parser.add_argument(
     help='print active profile settings'
 )
 parser.add_argument(
-    '-r', '--render', action='store_true', default=False,
+    '-e', '--render', action='store_true', default=False,
     help='render docker-compose.yaml for currently set profile'
 )
 parser.add_argument(
@@ -70,3 +79,11 @@ if __name__ == '__main__':
 
     if args.render is True:
         dcy.render_dc_yaml(args.dry_run)
+
+    if args.run is True:
+        run = Runner(prof.get())
+        run.start()
+
+    if args.tail_logs is True:
+        run = Runner(prof.get())
+        run.tail_logs()

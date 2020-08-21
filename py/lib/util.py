@@ -4,6 +4,7 @@ import re
 from os.path import join as pj
 from os.path import sep as sep
 from subprocess import PIPE, Popen
+from sys import exit as x
 
 import yaml
 
@@ -32,6 +33,24 @@ def find(root, filter='.*', filter_type='f'):
                 if bool(re.search(filter, rdir)) is True:
                     detected.append(rdir)
     return(sorted(detected))
+
+
+def run_cmd(cmd, silent=True, debug=False):
+    o = ''
+    if debug is False:
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
+        (out, err) = proc.communicate()
+        exitcode = proc.wait()
+        if exitcode != 0:
+            print(err.decode('utf-8'))
+            return (False, None)
+            x()
+        o = out.decode('utf-8')
+        if silent is False:
+            print(o)
+    else:
+        print(' '.join(cmd))
+    return o
 
 
 def is_git(folder):
