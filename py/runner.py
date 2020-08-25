@@ -6,9 +6,9 @@ from py.lib.util import run_cmd
 
 
 class Runner():
-    def __init__(self, conf, debug=True):
+    def __init__(self, profconf, debug=True):
         self.c = Colours()
-        self.conf = conf
+        self.profconf = profconf
         self.debug = debug
 
     def run_cmd_fg(self, cmd):
@@ -24,7 +24,7 @@ class Runner():
             return 'sudo '
 
     def dcf(self):
-        return '-f ' + self.conf['dc_yaml'] + ' '
+        return '-f ' + self.profconf['dc_yaml'] + ' '
 
     def dc(self, args):
         self.run_cmd_fg(
