@@ -55,6 +55,9 @@ if __name__ == '__main__':
     prof = Profile(conf)
     dcy = DCYaml(conf, prof)
 
+    if args.list_profiles is True:
+        prof.list()
+
     if args.create_profile is not None:
         prof.create(args.create_profile)
 

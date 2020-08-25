@@ -4,8 +4,8 @@ from shutil import copyfile as cp
 from sys import exit as x
 
 from py.lib.colours import Colours
-from py.lib.util import (find, mkdir, path_up_to_last_slash, read_yaml,
-                         write_yaml)
+from py.lib.util import (find, mkdir, path_up_to_last_slash, pprint, read_yaml,
+                         rxsearch, write_yaml)
 
 
 class Profile():
@@ -79,3 +79,12 @@ class Profile():
         r['folder'] = path_up_to_last_slash(f[0])
         r['dc_yaml'] = pj(r['folder'], 'docker-compose.yaml')
         return r
+
+    def list(self):
+        print(self.c.yel('The following profiles are available'))
+        arr = find(self.conf['prof']['basedir'], r'.*.conf.yaml$', 'f')
+        for el in arr:
+            shortname = rxsearch(r'[^/]+/[^/]+$', el)
+            profname = rxsearch(r'.*(?=\/)', shortname)
+            print('\n' + self.c.mag(profname))
+            pprint(self.get(profname))

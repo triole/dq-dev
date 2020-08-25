@@ -1,5 +1,5 @@
-import json
 import os
+import pprint as ppr
 import re
 from os.path import join as pj
 from os.path import sep as sep
@@ -104,7 +104,6 @@ def path_up_to_last_slash(s):
     return rxsearch('.*(?=\\' + sep + ')', s)
 
 
-def pprint(jdata):
-    if type(jdata) == str:
-        jdata = json.dumps(jdata)
-    print(json.dumps(jdata, sort_keys=True, indent=4))
+def pprint(obj):
+    pp = ppr.PrettyPrinter(indent=4)
+    pp.pprint(obj)
