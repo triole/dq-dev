@@ -15,10 +15,7 @@ function install_caddy() {
     curl -Ls ${caddy_bin_url} -o "${tmpfil}" &&
         tar xf "${tmpfil}" -C "${tfol}"
 
-    sudo rm -f "/bin/caddy"
-    sudo ln -s "${HOME}/bin/caddy" "/bin/caddy"
-
     echo "Caddy version $(caddy version) installed"
 }
 
-sudo caddy version || install_caddy
+caddy version || install_caddy

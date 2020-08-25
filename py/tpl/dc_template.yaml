@@ -7,7 +7,6 @@ services:
         container_name: dqdev-daiq
         depends_on:
             - pgapp
-        links:
             - pgdata
             - wpdb
         restart: always

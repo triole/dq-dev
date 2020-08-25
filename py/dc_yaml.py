@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 
 from py.lib.colours import Colours
@@ -22,17 +23,17 @@ class DCYaml():
             print('Can not find "' + yaml + '"')
             sys.exit(1)
         print('Read config file ' + self.c.yel(yaml))
-        conf = read_yaml(yaml)
-        return conf
+        profconf = read_yaml(yaml)
+        return profconf
 
     def render_dc_yaml(self, profname=None):
         gp = self.prof.get(profname)
-        conf = self.get_yaml_template(gp)
+        profconf = self.get_yaml_template(gp)
         print('Render dc yaml to ' + self.c.yel(gp['dc_yaml']))
 
-        env = gather_env(conf)
-        ports = gather_ports(conf)
-        volumes = gather_volumes(conf)
+        env = gather_env(profconf)
+        ports = gather_ports(profconf)
+        volumes = gather_volumes(profconf, gp)
 
         for vol in volumes:
             t = {}
@@ -57,7 +58,8 @@ class DCYaml():
 
             self.dyaml['services'][ser]['volumes'] = []
             for vol in volumes:
-                if valid_volume(vol, required_git=vol['required_git']) is True:
+                if valid_volume(vol, required_git=vol['required_git']) is True\
+                        and bool(re.search(vol['mount_inside'], ser)) is True:
 
                     self.dyaml['services'][ser]['volumes'].append(
                         vol['name'] + ':' + vol['mp']

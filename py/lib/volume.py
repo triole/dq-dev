@@ -1,24 +1,52 @@
 import os
+from os.path import join as pj
+from sys import exit as x
 
-from py.lib.util import expand_vars, is_git
+from py.lib.util import expand_vars, is_git, mkdir
 
 
-def gather_volumes(conf):
+def make_volume(volname, mp, folder_on_host, required_git=False, mount_inside='.*'):
+    vol = {}
+    vol['name'] = volname
+    vol['mp'] = mp
+    vol['required_git'] = required_git
+    vol['mount_inside'] = mount_inside
+    vol['driver_opts'] = {}
+    vol['driver_opts']['o'] = 'bind'
+    vol['driver_opts']['type'] = 'none'
+    vol['driver_opts']['device'] = expand_vars(folder_on_host)
+    return vol
+
+
+def gather_volumes(conf, prof):
     vols = []
     for volname in conf['docker_volume_mountpoints']:
-        vol = {}
-        vol['driver_opts'] = {}
-        vol['driver_opts']['o'] = 'bind'
-        vol['driver_opts']['type'] = 'none'
-        vol['mp'] = conf['docker_volume_mountpoints'][volname]
-        vol['required_git'] = volname.startswith('dq_')
+        vn = volname
         if volname == 'dq_app':
             volname = conf['active_app']
-        vol['name'] = volname
-        vol['driver_opts']['device'] = expand_vars(
-            conf['folders_on_host'][volname]
+        vols.append(
+            make_volume(
+                volname,
+                conf['docker_volume_mountpoints'][vn],
+                conf['folders_on_host'][volname],
+                vn.startswith('dq_')
+            )
         )
-        vols.append(vol)
+    for volname in conf['enable_database_volumes']:
+        if conf['enable_database_volumes'][volname] is True:
+            volfolder = pj(prof['folder'], volname)
+            mkdir(volfolder)
+            mp = '/var/lib/mysql'
+            if volname.startswith('pg'):
+                mp = '/var/lib/postgresql/data'
+            vols.append(
+                make_volume(
+                    volname,
+                    mp,
+                    volfolder,
+                    mount_inside=volname
+                )
+            )
     return vols
 
 
@@ -40,13 +68,12 @@ def valid_volume(invol, required_git=False):
         ig = is_git(dev)
         if ig[0] is False:
             print(
-                cwarn +
-                '\nFolder ' + cyel + dev + cwarn +
+                '\nFolder "' + dev + '" ' +
                 ' does not look like a git repo.\n' +
-                'Please make sure that it really contains the source of ' +
-                cyel + invol['name'] + cend + '\n'
+                'Please make sure that it really contains the source of' +
+                ' "' + invol['name'] + '"' + '\n'
             )
-            sys.exit(1)
+            x(1)
         else:
             r = True
     return r
