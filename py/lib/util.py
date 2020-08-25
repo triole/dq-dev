@@ -15,8 +15,11 @@ def appendx(val, arr):
     return arr
 
 
-def expand_vars(str):
-    return str.replace('<HOME>', os.environ['HOME'])
+def expand_vars(str, replace_list=[]):
+    r = str.replace('<HOME>', os.environ['HOME'])
+    for el in replace_list:
+        r = r.replace(el[0], el[1])
+    return r
 
 
 def find(root, filter='.*', filter_type='f'):

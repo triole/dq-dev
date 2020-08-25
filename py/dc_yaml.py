@@ -31,7 +31,7 @@ class DCYaml():
         profconf = self.get_yaml_template(gp)
         print('Render dc yaml to ' + self.c.yel(gp['dc_yaml']))
 
-        env = gather_env(profconf)
+        env = gather_env(profconf, gp['name'])
         ports = gather_ports(profconf)
         volumes = gather_volumes(profconf, gp)
 
