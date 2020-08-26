@@ -2,12 +2,12 @@
 import argparse
 import os
 
-from py.dc_yaml import DCYaml
-from py.lib.colours import Colours
-from py.lib.init import init
-from py.lib.util import pprint
+from py.colours import Colours
+from py.dcompose import DCompose
+from py.init import init
 from py.profile import Profile
 from py.runner import Runner
+from py.util import pprint
 
 parser = argparse.ArgumentParser(
     description=os.path.basename(__file__).title() + ': ' +
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     col = Colours()
     conf = init(args)
     prof = Profile(conf)
-    dcy = DCYaml(conf, prof)
+    dco = DCompose(conf, prof)
 
     if args.list_profiles is True:
         prof.list()
@@ -65,17 +65,22 @@ if __name__ == '__main__':
         prof.set(args.set_profile)
 
     if args.display_profile is not None:
-        p = prof.get(conf['args']['display_profile'])
+        print(conf['args']['display_profile'])
+        p = prof.get_profile_conf_by_name(conf['args']['display_profile'])
         print(col.yel('Currently set profile'))
         pprint(p)
 
     if args.render is not None:
-        dcy.render_dc_yaml(conf['args']['render'])
+        dco.render_dc_yaml(conf['args']['render'])
 
     if args.run is not None:
-        run = Runner(prof.get(conf['args']['run']), args.dry_run)
+        dco.render_dc_yaml(conf['args']['run'])
+        run = Runner(
+            prof.get_profile_yaml_by_name(conf['args']['run']),
+            args.dry_run
+        )
         run.start()
 
     if args.tail_logs is True:
-        run = Runner(prof.get(conf['args']['tail_logs']))
+        run = Runner(prof.get_profile_conf_by_name(conf['args']['tail_logs']))
         run.tail_logs()

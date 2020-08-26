@@ -2,6 +2,11 @@
 # in the 'folders_on_host' entry below
 active_app: daiquiri
 
+enable_database_volumes:
+    pgapp: False
+    pgdata: True
+    wpdb: True
+
 folders_on_host:
     # daiquiri source repo
     dq_source: <HOME>/rolling/aip/github/daiquiri
@@ -31,7 +36,8 @@ exposed_ports:
     wpdb:
         # - 9283:3306
 
-# the container's environment variables for configuration
+# the containers' environment variables
+# service names are also derived from here
 env:
     daiquiri:
         - WORDPRESS_TITLE=dqdev
@@ -42,8 +48,8 @@ env:
         - WORDPRESS_DB_NAME=wordpress
         - WORDPRESS_DB_PASSWORD=wordpress
         - WORDPRESS_TABLE_PREFIX=wp_
-        - DATABASE_APP=postgresql://daiquiri_app:daiquiri_app@dqdev-pgapp/daiquiri_app
-        - DATABASE_DATA=postgresql://daiquiri_data:daiquiri_data@dqdev-pgdata/daiquiri_data
+        - DATABASE_APP=postgresql://daiquiri_app:daiquiri_app@<CONTAINER_PGAPP>/daiquiri_app
+        - DATABASE_DATA=postgresql://daiquiri_data:daiquiri_data@<CONTAINER_PGDATA>/daiquiri_data
         - ALLOWED_HOSTS=*
         - SECRET_KEY=verysecretkey
         - DEBUG=True

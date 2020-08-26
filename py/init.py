@@ -1,13 +1,13 @@
 import os
 from os.path import join as pj
 
-from py.lib.util import mkdir
+from py.util import mkdir
 
 
 def init(args):
     conf = {}
     n = os.path.realpath(__file__)
-    basedir = '/'.join(n.split('/')[:-3])
+    basedir = '/'.join(n.split('/')[:-2])
     conf['basedir'] = basedir
     conf['args'] = {}
     conf['args']['run'] = parse_nargs(args.run)
@@ -18,7 +18,7 @@ def init(args):
     conf['prof']['basedir'] = pj(basedir, 'usr', 'profiles')
     conf['prof']['active_conf'] = pj(conf['prof']['basedir'], 'active.yaml')
     conf['templ'] = {}
-    conf['templ']['config'] = pj(basedir, 'py', 'tpl', 'conf.yaml')
+    conf['templ']['config'] = pj(basedir, 'tpl', 'conf.yaml')
     conf['templ']['dc'] = pj(basedir, 'py', 'tpl', 'dc_template.yaml')
     conf['dry_run'] = args.dry_run
     mkdir(conf['prof']['basedir'])

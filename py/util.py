@@ -9,19 +9,6 @@ from sys import exit as x
 import yaml
 
 
-def appendx(val, arr):
-    if val not in arr:
-        arr.append(val)
-    return arr
-
-
-def expand_vars(str, replace_list=[]):
-    r = str.replace('<HOME>', os.environ['HOME'])
-    for el in replace_list:
-        r = r.replace(el[0], el[1])
-    return r
-
-
 def find(root, filter='.*', filter_type='f'):
     detected = []
     for (path, dirs, files) in os.walk(root):

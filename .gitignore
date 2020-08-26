@@ -4,8 +4,6 @@ tmp/
 usr/
 vol/
 
-profile_conf.yaml
 *.local
-conf_local.yaml
-docker-compose.yaml
-notes.md
+*.pyc
+.imdone/

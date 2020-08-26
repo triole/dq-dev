@@ -1,14 +1,14 @@
 import os
 import re
 
-from py.lib.colours import Colours
-from py.lib.util import run_cmd
+from py.colours import Colours
+from py.util import run_cmd
 
 
 class Runner():
-    def __init__(self, profconf, debug=True):
+    def __init__(self, dcyaml, debug=True):
         self.c = Colours()
-        self.profconf = profconf
+        self.dcyaml = dcyaml
         self.debug = debug
 
     def run_cmd_fg(self, cmd):
@@ -24,7 +24,7 @@ class Runner():
             return 'sudo '
 
     def dcf(self):
-        return '-f ' + self.profconf['dc_yaml'] + ' '
+        return '-f ' + self.dcyaml + ' '
 
     def dc(self, args):
         self.run_cmd_fg(
