@@ -65,10 +65,13 @@ if __name__ == '__main__':
         prof.set(args.set_profile)
 
     if args.display_profile is not None:
-        print(conf['args']['display_profile'])
-        p = prof.get_profile_conf_by_name(conf['args']['display_profile'])
-        print(col.yel('Currently set profile'))
-        pprint(p)
+        c = prof.read_profile_config(conf['args']['display_profile'])
+        print(
+            'Currently set profile',
+            col.yel(c['name'])
+
+        )
+        pprint(c)
 
     if args.render is not None:
         dco.render_dc_yaml(conf['args']['render'])
