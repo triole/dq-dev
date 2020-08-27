@@ -116,14 +116,9 @@ class DCompose():
             self.dcyaml['services'][service]['volumes'] = []
 
             for vol in self.volumes:
-                if self.valid_volume(
-                        vol, required_git=vol['required_git']
-                    ) is True and bool(
-                            re.search(vol['mount_inside'], service)
-                        ) is True:
-                    self.dcyaml['services'][service]['volumes'].append(
-                        vol['name'] + ':' + vol['mp']
-                    )
+                self.dcyaml['services'][service]['volumes'].append(
+                    vol['name'] + ':' + vol['mp']
+                )
 
     def make_volumes(self):
         vols = []
@@ -134,14 +129,15 @@ class DCompose():
                 fol = self.profconf['conf']['folders_on_host'][
                     self.profconf['conf']['active_app']
                 ]
-            vols.append(
-                self.make_volume(
-                    volname + '_' + self.profconf['name'],
-                    self.profconf['conf']['docker_volume_mountpoints'][volname],    # noqa: E501
-                    fol,
-                    volname.startswith('dq_')
-                )
+            v = self.make_volume(
+                volname + '_' + self.profconf['name'],
+                self.profconf['conf']['docker_volume_mountpoints'][volname],    # noqa: E501
+                fol,
+                volname.startswith('dq_')
             )
+            if self.valid_volume(v) is True:
+                vols.append(v)
+
         for volname in self.profconf['conf']['enable_database_volumes']:
             if self.profconf['conf']['enable_database_volumes'][volname] is True:   # noqa: E501
                 volfolder = pj(
@@ -179,28 +175,28 @@ class DCompose():
         vol['driver_opts']['device'] = self.expand_vars(folder_on_host)
         return vol
 
-    def valid_volume(self, invol, required_git=False):
+    def valid_volume(self, vol):
         r = False
-        dev = invol['driver_opts']['device']
+        dev = vol['driver_opts']['device']
         is_dir = os.path.isdir(dev)
 
-        if is_dir is False and required_git is False:
+        if is_dir is False and vol['required_git'] is False:
             print(
-                'Run without volume \"' + invol['name'] +
-                '\". Path on host does not exist \"' + dev + '\"'
+                'Run without volume ' + self.c.yel(vol['name']) +
+                '. Path does not exist on host ' + self.c.yel(dev)
             )
 
         if is_dir is True:
             r = True
 
-        if required_git is True:
+        if vol['required_git'] is True:
             ig = is_git(dev)
             if ig[0] is False:
                 print(
-                    '\nFolder "' + dev + '" ' +
-                    ' does not look like a git repo.\n' +
-                    'Please make sure that it really contains the source of' +
-                    ' "' + invol['name'] + '"' + '\n'
+                    '\n' + self.c.err() + 'Folder ' + self.c.yel(dev) +
+                    ' does not look like a git repo. ' +
+                    '\nPlease make sure that it contains the source of ' +
+                    self.c.yel(vol['name']) + '\n'
                 )
                 x(1)
             else:

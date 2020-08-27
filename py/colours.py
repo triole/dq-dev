@@ -10,3 +10,6 @@ class Colours():
 
     def mag(self, s):
         return '\033[95m' + s + self.end
+
+    def err(self):
+        return self.red('Error: ') + self.end
