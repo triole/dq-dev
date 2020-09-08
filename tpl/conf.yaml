@@ -43,7 +43,7 @@ env:
         - WORDPRESS_TITLE=dqdev
         - WORDPRESS_URL=/cms/
         - WORDPRESS_CLI=/usr/bin/wp
-        - WORDPRESS_DB_HOST=dqdev-wpdb:3306
+        - WORDPRESS_DB_HOST=<CONTAINER_WPDB>:3306
         - WORDPRESS_DB_USER=wordpress
         - WORDPRESS_DB_NAME=wordpress
         - WORDPRESS_DB_PASSWORD=wordpress
@@ -81,4 +81,4 @@ env:
         - MYSQL_USER=wordpress
         - MYSQL_PASSWORD=wordpress
         - MYSQL_PORT=3306
-        - MYSQL_HOSTNAME=dq-wpdb
+        - MYSQL_HOSTNAME=<CONTAINER_WPDB>

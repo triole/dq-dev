@@ -26,7 +26,8 @@ class DCompose():
         return str\
             .replace('<HOME>', os.environ['HOME'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
-            .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))
+            .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
+            .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))
 
     # service and container names
     def make_names(self):
