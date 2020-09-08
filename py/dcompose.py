@@ -108,6 +108,7 @@ class DCompose():
     # volumes
     def add_volumes(self):
         for vol in self.volumes:
+            print(vol)
             self.dcyaml['volumes'][vol['name']] = {}
             self.dcyaml['volumes'][vol['name']]['driver_opts'] =\
                 vol['driver_opts']
@@ -116,9 +117,10 @@ class DCompose():
             self.dcyaml['services'][service]['volumes'] = []
 
             for vol in self.volumes:
-                self.dcyaml['services'][service]['volumes'].append(
-                    vol['name'] + ':' + vol['mp']
-                )
+                if bool(re.search(vol['mount_inside'], service)) is True:
+                    self.dcyaml['services'][service]['volumes'].append(
+                        vol['name'] + ':' + vol['mp']
+                    )
 
     def make_volumes(self):
         vols = []
