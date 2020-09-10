@@ -75,6 +75,7 @@ if __name__ == '__main__':
 
     if args.render is not None:
         dco.render_dc_yaml(conf['args']['render'])
+        dco.render_dockerfile_templates()
 
     if args.run is not None:
         dco.render_dc_yaml(conf['args']['run'])
@@ -82,6 +83,7 @@ if __name__ == '__main__':
             prof.get_profile_yaml_by_name(conf['args']['run']),
             args.dry_run
         )
+        dco.render_dockerfile_templates()
         run.start()
 
     if args.tail_logs is True:

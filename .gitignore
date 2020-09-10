@@ -7,3 +7,5 @@ vol/
 *.local
 *.pyc
 .imdone/
+
+docker/daiquiri/dockerfile

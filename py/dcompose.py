@@ -4,7 +4,8 @@ from os.path import join as pj
 from sys import exit as x
 
 from py.colours import Colours
-from py.util import is_git, mkdir, pprint, write_yaml
+from py.util import (find, is_git, mkdir, pprint, rxbool, rxsearch,
+                     write_array_to_file, write_yaml)
 
 
 class DCompose():
@@ -27,7 +28,9 @@ class DCompose():
             .replace('<HOME>', os.environ['HOME'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
             .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
-            .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))
+            .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))\
+            .replace('<UID>', self.conf['user']['idstr'])\
+            .replace('<GID>', self.conf['user']['idstr'])
 
     # service and container names
     def make_names(self):
@@ -109,7 +112,6 @@ class DCompose():
     # volumes
     def add_volumes(self):
         for vol in self.volumes:
-            print(vol)
             self.dcyaml['volumes'][vol['name']] = {}
             self.dcyaml['volumes'][vol['name']]['driver_opts'] =\
                 vol['driver_opts']
@@ -118,7 +120,7 @@ class DCompose():
             self.dcyaml['services'][service]['volumes'] = []
 
             for vol in self.volumes:
-                if bool(re.search(vol['mount_inside'], service)) is True:
+                if rxbool(vol['mount_inside'], service) is True:
                     self.dcyaml['services'][service]['volumes'].append(
                         vol['name'] + ':' + vol['mp']
                     )
@@ -216,6 +218,24 @@ class DCompose():
                 self.c.yel(self.profconf['dc_yaml'])
             )
             write_yaml(self.dcyaml, self.profconf['dc_yaml'])
+
+    def render_dockerfile_templates(self):
+        arr = find(self.conf['basedir'], '.*/dockerfile.tpl', 'f')
+        for fn in arr:
+            print('Render dockerfile template ' + self.c.yel(fn))
+            self.render_template_file(fn)
+
+    def render_template_file(self, filename):
+        new_filename = rxsearch(r'.*(?=\.)', filename)
+        r = []
+        try:
+            filecontent = open(filename, 'r')
+        except Exception as e:
+            raise(e)
+        else:
+            for line in filecontent.read().splitlines():
+                r.append(self.expand_vars(line))
+        write_array_to_file(r, new_filename)
 
     # main
     def render_dc_yaml(self, profname=None):

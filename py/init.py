@@ -21,6 +21,9 @@ def init(args):
     conf['templ']['config'] = pj(basedir, 'tpl', 'conf.yaml')
     conf['templ']['dc'] = pj(basedir, 'py', 'tpl', 'dc_template.yaml')
     conf['dry_run'] = args.dry_run
+    conf['user'] = {}
+    conf['user']['id'] = os.getuid()
+    conf['user']['idstr'] = str(conf['user']['id'])
     mkdir(conf['prof']['basedir'])
     return conf
 

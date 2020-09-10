@@ -75,12 +75,22 @@ def write_yaml(data, filename):
         yaml.dump(data, outfile, default_flow_style=False, indent=4)
 
 
+def write_array_to_file(data, filename, mode='w'):
+    with open(filename, mode) as fp:
+        for line in data:
+            fp.write(line + '\n')
+
+
 def rxsearch(rx, s, gr=0):
     r = None
     m = re.search(rx, s, flags=re.IGNORECASE)
     if bool(m) is True:
         r = m.group(gr)
     return r
+
+
+def rxbool(rx, s):
+    return bool(re.search(rx, s))
 
 
 def path_after_last_slash(s):
