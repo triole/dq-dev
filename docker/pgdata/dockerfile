@@ -5,9 +5,4 @@ ENV PATH="${PATH}:/opt:/vol/tools/shed"
 RUN apt update -y && apt install -y \
     postgresql-client
 
-COPY ./opt/ /
-
-# create DB, user, permissions
-
-# not necessary, but for sake of clarity
-CMD ["postgres"]
+RUN sed -i -e 's/^\(postgres:[^:]\):[0-9]*:[0-9]*:/\1:1000:1000:/' /etc/passwd
