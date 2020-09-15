@@ -8,4 +8,4 @@ vol/
 *.pyc
 .imdone/
 
-docker/daiquiri/dockerfile
+docker/*/dockerfile
