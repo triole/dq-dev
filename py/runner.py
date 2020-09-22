@@ -39,5 +39,14 @@ class Runner():
     def stop(self):
         self.dc('stop')
 
+    def down(self, rmi):
+        cmd = 'down --volumes --remove-orphans'
+        if rmi is True:
+            cmd += ' --rmi all'
+        self.dc(cmd)
+
     def tail_logs(self):
         self.dc('logs -f')
+
+    def remove_images(self):
+        self.dc('down --volume')

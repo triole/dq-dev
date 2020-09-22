@@ -23,12 +23,20 @@ parser.add_argument(
     help='stop profile\'s running containers'
 )
 parser.add_argument(
-    '-g', '--tail_logs', type=str, nargs='*', default=None,
-    help='tail docker compose logs'
+    '-d', '--down', type=str, nargs='*', default=None,
+    help=(
+        'stop and remove profile\'s running containers, ' +
+        'remove docker\'s volumes, keep folders containing the ' +
+        'volume data, they can be reused on next run'
+    )
 )
 parser.add_argument(
-    '-e', '--render', type=str, nargs='*', default=None,
-    help='only render docker-compose.yaml for profile'
+    '-rmi', '--remove_images', action='store_true', default=False,
+    help='remove images when running "down", used in combination "-d -rmi"\n\n'
+)
+parser.add_argument(
+    '-g', '--tail_logs', type=str, nargs='*', default=None,
+    help='tail docker compose logs\n\n'
 )
 parser.add_argument(
     '-c', '--create_profile', type=str, default=None,
@@ -37,6 +45,10 @@ parser.add_argument(
 parser.add_argument(
     '-s', '--set_profile', type=str, default=None,
     help='set profile to active'
+)
+parser.add_argument(
+    '-e', '--render', type=str, nargs='*', default=None,
+    help='only render docker-compose.yaml for profile'
 )
 parser.add_argument(
     '-a', '--display_profile', type=str, nargs='*', default=None,
@@ -48,7 +60,10 @@ parser.add_argument(
 )
 parser.add_argument(
     '-n', '--dry_run', action='store_true', default=False,
-    help='do not render docker-compose.yaml, just print it'
+    help=(
+        'do not run any docker-compose commands nor ' +
+        'save rendered docker-compose.yaml, just print them'
+    )
 )
 args = parser.parse_args()
 
@@ -58,6 +73,11 @@ if __name__ == '__main__':
     conf = init(args)
     prof = Profile(conf)
     dco = DCompose(conf, prof)
+
+    run = Runner(
+        prof.get_profile_yaml_by_name(conf['args']['run']),
+        args.dry_run
+    )
 
     if args.list_profiles is True:
         prof.list()
@@ -83,19 +103,14 @@ if __name__ == '__main__':
 
     if args.run is not None:
         dco.render_dc_yaml(conf['args']['run'])
-        run = Runner(
-            prof.get_profile_yaml_by_name(conf['args']['run']),
-            args.dry_run
-        )
         dco.render_dockerfile_templates()
         run.start()
 
     if args.stop is not None:
-        run = Runner(
-            prof.get_profile_yaml_by_name(conf['args']['run']),
-            args.dry_run
-        )
         run.stop()
+
+    if args.down is not None:
+        run.down(args.remove_images)
 
     if args.tail_logs is True:
         run = Runner(prof.get_profile_conf_by_name(conf['args']['tail_logs']))
