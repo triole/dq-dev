@@ -19,6 +19,10 @@ parser.add_argument(
     help='run a profile\'s containers'
 )
 parser.add_argument(
+    '-p', '--stop', type=str, nargs='*', default=None,
+    help='stop profile\'s running containers'
+)
+parser.add_argument(
     '-g', '--tail_logs', type=str, nargs='*', default=None,
     help='tail docker compose logs'
 )
@@ -85,6 +89,13 @@ if __name__ == '__main__':
         )
         dco.render_dockerfile_templates()
         run.start()
+
+    if args.stop is not None:
+        run = Runner(
+            prof.get_profile_yaml_by_name(conf['args']['run']),
+            args.dry_run
+        )
+        run.stop()
 
     if args.tail_logs is True:
         run = Runner(prof.get_profile_conf_by_name(conf['args']['tail_logs']))

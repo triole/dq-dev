@@ -36,8 +36,8 @@ class Runner():
         self.dc('up --build -d')
         self.tail_logs()
 
-    def down(self):
-        self.dc('down --verbose')
+    def stop(self):
+        self.dc('stop')
 
     def tail_logs(self):
         self.dc('logs -f')
