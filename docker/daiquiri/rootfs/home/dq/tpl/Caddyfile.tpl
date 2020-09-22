@@ -17,12 +17,13 @@
 }
 
 :<EXPOSED_PORT>/cms* {
-    redir /cms/admin /cms/admin/
+
+    redir /cms /cms/
+    redir /cms/admin /cms/wp-admin/
     redir /cms/admin/ /cms/wp-admin/
+    redir /cms/wp-admin /cms/wp-admin/
 
     uri strip_prefix /cms
-    redir /cms /cms/
-    rewrite /cms/ /
 
     file_server
     root * <WORDPRESS_PATH>
