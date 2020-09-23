@@ -1,0 +1,27 @@
+-
+    url: ""
+    exp: A framework for the publication of scientific databases
+-
+    url: /
+    exp: A framework for the publication of scientific databases
+-
+    url: /cms
+    exp: Welcome to WordPress. This is your first post.
+-
+    url: /cms/
+    exp: Welcome to WordPress. This is your first post.
+-
+    url: /cms/admin
+    exp: If you have not created an account yet
+-
+    url: /cms/admin/
+    exp: If you have not created an account yet
+-
+    url: /cms/wp-admin
+    exp: If you have not created an account yet
+-
+    url: /contact
+    exp: Please log in to be able to fill the contact form
+-
+    url: /contact/
+    exp: Please log in to be able to fill the contact form

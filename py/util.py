@@ -7,6 +7,7 @@ from subprocess import PIPE, Popen
 from sys import exit as x
 
 import yaml
+from tabulate import tabulate
 
 
 def find(root, filter='.*', filter_type='f'):
@@ -104,3 +105,7 @@ def path_up_to_last_slash(s):
 def pprint(obj):
     pp = ppr.PrettyPrinter(indent=4)
     pp.pprint(obj)
+
+
+def ptable(head, tab):
+    print(tabulate(tab, headers=head))
