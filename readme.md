@@ -5,7 +5,8 @@
 1.	[Synopsis](#synopsis)
 2.	[How to use](#how-to-use)
 3.	[Tech background](#tech-background)
-	1.	[Dependencies](#dependencies)<!--- mdtoc: toc end -->
+	1.	[Dependencies](#dependencies)
+	2.	[Tests](#tests)<!--- mdtoc: toc end -->
 
 ## Synopsis
 
@@ -43,3 +44,7 @@ A python script is used to render the `docker-compose.yaml`. The script is calle
 ```
 pip install -r requirements.txt
 ```
+
+### Tests
+
+In the mainfolder is a python script `request_test.py` that fires some simple requests at Daiquiri. It helps to check proxy configurations. Try `python request_test.py -h` to find out what it can do.

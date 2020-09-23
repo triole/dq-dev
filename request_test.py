@@ -1,67 +1,109 @@
+import argparse
 import os
-import pickle
 import re
 from os.path import join as pj
 
 import requests
-import yaml
 
 from py.colours import Colours
-from py.util import ptable
-
-
-def read_yaml(filename):
-    with open(filename, 'r') as stream:
-        try:
-            return(yaml.safe_load(stream))
-        except yaml.YAMLError as exc:
-            print(exc)
+from py.util import ptable, read_yaml
 
 
 class ReqCheck():
-    def __init__(self, base_url="http://localhost:9280"):
+    def __init__(self, conffile):
+        self.conf = read_yaml(conffile)
         self.col = Colours()
-        self.scriptname = os.path.realpath(__file__)
-        self.scriptdir = '/'.join(self.scriptname.split('/')[:-1])
-        self.urls = {}
-        self.urls['base'] = base_url
-        self.urls['login'] = '/accounts/login/'
-        self.cred = {}
-        self.cred['user'] = 'admin'
-        self.cred['pass'] = 'admin'
         self.req = {}
-        self.req['headers'] = (
-            'User-Agent: Mozilla/5.0 ' +
-            '(X11; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'
-        )
-        self.session = requests.session()
-        self.conf = read_yaml(
-            pj(self.scriptdir, 'py', 'testconf', 'request_test.yaml')
-        )
+        self.req['headers'] = {
+            'user-agent': self.conf['ua']
+        }
+        self.s_in = self.session_login()
+        self.s_out = requests.session()
 
-    def save_cookies(self):
-        with open('/tmp/dqreqcheck.tmp', 'wb') as f:
-            pickle.dump(self.session.cookies, f)
+    def get(self, url, login=False):
+        rqu = self.conf['urls']['base'] + url
+        if login is False:
+            return self.s_out.get(rqu, headers=self.req['headers'])
+        else:
+            return self.s_in.get(rqu, headers=self.req['headers'])
 
-    def request(self, url):
-        return self.session.get(self.urls['base'] + url)
+    def post(self, url, data=None, login=False):
+        rqu = self.conf['urls']['base'] + url
+        if login is False:
+            return self.s_out.post(rqu, data=data, headers=self.req['headers'])
+        else:
+            return self.s_in.post(rqu, data=data, headers=self.req['headers'])
 
-    def assert_page(self, url, rx):
-        t = self.request(url)
-        return bool(re.search(rx, t.text))
+    def assert_page(self, url, rx, login=False):
+        t = self.get(url, login)
+        b = bool(re.search(rx, t.text))
+        if b is True:
+            return [self.col.gre('[good]'), login, url, rx]
+        else:
+            return [self.col.red('[fail]'), login, url, rx]
+
+    def assert_source(self, src, rx):
+        return bool(re.search(rx, src))
 
     def assert_all(self):
         tab = []
-        for el in self.conf:
-            if self.assert_page(el['url'], el['exp']) is True:
-                line = [self.col.gre('[good]'), el['url'], el['exp']]
-            else:
-                line = [self.col.red('[fail]'), el['url'], el['exp']]
-            tab.append(line)
+        for el in self.conf['request_check']:
+            tab.append(self.assert_page(el['url'], el['exp_out'], login=False))
+            tab.append(self.assert_page(el['url'], el['exp_in'], login=True))
+            if el['url'].endswith('/'):
+                rqu = el['url'][:-1]
+                tab.append(self.assert_page(rqu, el['exp_out'], login=False))
+                tab.append(self.assert_page(rqu, el['exp_in'], login=True))
+        tab = sorted(tab, key=lambda x: (x[1], x[2]))
         return tab
+
+    def session_login(self):
+        sess = requests.session()
+        src = sess.get(self.conf['urls']['base'] + '/accounts/login/')
+        formtoken = re.search(
+            r'(csrfmiddlewaretoken.*value=")([a-zA-Z0-9]+)', src.text
+        ).group(2)
+        csrftoken = sess.cookies['csrftoken']
+        login_data = {
+            'login': self.conf['cred']['user'],
+            'password': self.conf['cred']['pass'],
+            'csrfmiddlewaretoken': csrftoken,
+            'csrftoken': formtoken,
+            'next': '/query/'
+        }
+        src = sess.post(
+            self.conf['urls']['base'] + self.conf['urls']['login'],
+            data=login_data,
+            headers=self.req['headers']
+        )
+        if bool(re.search(r'If you forgot your password', src.text)) is True:
+            print(
+                self.col.red('\nLogin failed. Please check your login data\n')
+            )
+        return sess
+
+    def logout(self):
+        self.post(self.conf['urls']['logout'])
 
 
 if __name__ == '__main__':
-    rq = ReqCheck()
+    scriptname = os.path.realpath(__file__)
+    scriptdir = '/'.join(scriptname.split('/')[:-1])
+    conffile = pj(scriptdir, 'py', 'testconf', 'request_test.yaml')
+
+    parser = argparse.ArgumentParser(
+        description=os.path.basename(__file__).title() + ': ' +
+        'Daiquiri request checker',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        '-c', '--config', type=str, default=conffile,
+        help='configuration file to use'
+    )
+    args = parser.parse_args()
+
+    rq = ReqCheck(args.config)
     res = rq.assert_all()
-    ptable(['result', 'url', 'expectation'], res)
+    ptable(['result', 'login', 'url', 'expectation'], res)
+
+    rq.logout()
