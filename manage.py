@@ -74,11 +74,6 @@ if __name__ == '__main__':
     prof = Profile(conf)
     dco = DCompose(conf, prof)
 
-    run = Runner(
-        prof.get_profile_yaml_by_name(conf['args']['run']),
-        args.dry_run
-    )
-
     if args.list_profiles is True:
         prof.list()
 
@@ -93,7 +88,6 @@ if __name__ == '__main__':
         print(
             'Currently set profile',
             col.yel(c['name'])
-
         )
         pprint(c)
 
@@ -104,12 +98,24 @@ if __name__ == '__main__':
     if args.run is not None:
         dco.render_dc_yaml(conf['args']['run'])
         dco.render_dockerfile_templates()
+        run = Runner(
+            prof.get_profile_yaml_by_name(conf['args']['run']),
+            args.dry_run
+        )
         run.start()
 
     if args.stop is not None:
+        run = Runner(
+            prof.get_profile_yaml_by_name(conf['args']['stop']),
+            args.dry_run
+        )
         run.stop()
 
     if args.down is not None:
+        run = Runner(
+            prof.get_profile_yaml_by_name(conf['args']['stop']),
+            args.dry_run
+        )
         run.down(args.remove_images)
 
     if args.tail_logs is True:
