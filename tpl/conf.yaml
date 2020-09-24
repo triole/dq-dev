@@ -40,7 +40,7 @@ exposed_ports:
 # service names are also derived from here
 env:
     daiquiri:
-        - BASE_URL=http://localhost
+        - URL_BASE=http://localhost:9280
         - WORDPRESS_TITLE=dqdev
         - WORDPRESS_URL=/cms/
         - WORDPRESS_CLI=/usr/bin/wp

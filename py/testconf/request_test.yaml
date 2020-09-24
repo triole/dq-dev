@@ -27,6 +27,10 @@ request_check:
         url: /query/
         exp_in: Place your SQL statement directly in the text area below
         exp_out: If you have not created an account yet
+    -
+        url: /static/jquery/jquery-3.2.1.min.js
+        exp_in: jQuery v3.2.1
+        exp_out: jQuery v3.2.1
 
 
 cred:
