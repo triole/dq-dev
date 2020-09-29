@@ -35,12 +35,16 @@ class ReqCheck():
             return self.s_in.post(rqu, data=data, headers=self.req['headers'])
 
     def assert_page(self, url, rx, login=False):
-        t = self.get(url, login)
-        b = bool(re.search(rx, t.text))
-        if b is True:
-            return [self.col.gre('[good]'), login, url, rx]
-        else:
+        try:
+            t = self.get(url, login)
+        except requests.exceptions.ConnectionError:
             return [self.col.red('[fail]'), login, url, rx]
+        else:
+            b = bool(re.search(rx, t.text))
+            if b is True:
+                return [self.col.gre('[good]'), login, url, rx]
+            else:
+                return [self.col.red('[fail]'), login, url, rx]
 
     def assert_source(self, src, rx):
         return bool(re.search(rx, src))
