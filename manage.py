@@ -73,7 +73,7 @@ if __name__ == '__main__':
     conf = init(args)
     prof = Profile(conf)
     dco = DCompose(conf, prof)
-
+    pprint(conf)
     if args.list_profiles is True:
         prof.list()
 

@@ -10,8 +10,10 @@ def init(args):
     basedir = '/'.join(n.split('/')[:-2])
     conf['basedir'] = basedir
     conf['args'] = {}
-    conf['args']['run'] = parse_nargs(args.run)
+    conf['args']['down'] = parse_nargs(args.down)
     conf['args']['render'] = parse_nargs(args.render)
+    conf['args']['run'] = parse_nargs(args.run)
+    conf['args']['stop'] = parse_nargs(args.stop)
     conf['args']['display_profile'] = parse_nargs(args.display_profile)
     conf['args']['tail_logs'] = parse_nargs(args.tail_logs)
     conf['prof'] = {}
