@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     if args.down is not None:
         run = Runner(
-            prof.get_profile_yaml_by_name(conf['args']['stop']),
+            prof.get_profile_yaml_by_name(conf['args']['down']),
             args.dry_run
         )
         run.down(args.remove_images)
