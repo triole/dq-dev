@@ -15,9 +15,9 @@ define('SCRIPT_DEBUG', true );
 #if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
 #     $_SERVER['HTTPS'] = 'on';
 #
-# $_SERVER['HTTPS'] = 'on';
-# $_SERVER['HTTP_HOST'] = 'www.astro-nfdi.org';
-# $_SERVER['SERVER_NAME'] = 'www.astro-nfdi.org';
+$_SERVER['HTTPS'] = '<SERVER_HTTPS>';
+$_SERVER['HTTP_HOST'] = '<URL_BASE>';
+$_SERVER['SERVER_NAME'] = '<URL_BASE>';
 
 define('CONCATENATE_SCRIPTS', false);
 define('DAIQUIRI_DEBUG', True);
@@ -27,10 +27,10 @@ define('SITECOOKIEPATH', COOKIEPATH);
 define('ADMIN_COOKIE_PATH', COOKIEPATH);
 define('PLUGINS_COOKIE_PATH', COOKIEPATH);
 
-define('WP_HOME', '<URL_BASE>/cms' );
-define('WP_SITEURL', '<URL_BASE>/cms');
+define('WP_HOME', 'https://<URL_BASE>/cms' );
+define('WP_SITEURL', 'https://<URL_BASE>/cms');
 
-define('DAIQUIRI_URL', '<URL_BASE>');
+define('DAIQUIRI_URL', 'https://<URL_BASE>');
 // define('DAIQUIRI_URL', 'http://localhost:80');
 
 /**#@+
