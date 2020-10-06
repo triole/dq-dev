@@ -25,7 +25,7 @@ def init(args):
     conf['dry_run'] = args.dry_run
     conf['user'] = {}
     conf['user']['id'] = os.getuid()
-    conf['user']['idstr'] = str(conf['user']['id'])
+    conf['user']['idstr'] = get_group(conf['user']['id'])
     mkdir(conf['prof']['basedir'])
     return conf
 
@@ -37,3 +37,11 @@ def parse_nargs(nargs):
         else:
             return nargs[0]
     return None
+
+
+def get_group(user_id):
+    groups = os.getgroups()
+    if user_id in groups:
+        return user_id
+    else:
+        return groups[len(groups)-1]
