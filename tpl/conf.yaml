@@ -41,6 +41,7 @@ exposed_ports:
 env:
     daiquiri:
         - URL_BASE=http://localhost:9280
+        - SERVER_HTTPS=on
         - WORDPRESS_TITLE=dqdev
         - WORDPRESS_URL=/cms/
         - WORDPRESS_CLI=/usr/bin/wp
