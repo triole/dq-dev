@@ -42,7 +42,7 @@ def parse_nargs(nargs):
 
 
 def get_group(user_id):
-    groups = os.getgroups()
+    groups = sorted(os.getgroups())
     if user_id in groups:
         return user_id
     else:
