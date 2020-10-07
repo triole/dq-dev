@@ -30,7 +30,7 @@ class DCompose():
             .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
             .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))\
             .replace('<UID>', self.conf['user']['idstr'])\
-            .replace('<GID>', self.conf['user']['idstr'])
+            .replace('<GID>', self.conf['user']['groupstr'])
 
     # service and container names
     def make_names(self):

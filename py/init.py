@@ -25,7 +25,9 @@ def init(args):
     conf['dry_run'] = args.dry_run
     conf['user'] = {}
     conf['user']['id'] = os.getuid()
-    conf['user']['idstr'] = get_group(conf['user']['id'])
+    conf['user']['idstr'] = str(conf['user']['id'])
+    conf['user']['group'] = get_group(conf['user']['id'])
+    conf['user']['groupstr'] = str(conf['user']['group'])
     mkdir(conf['prof']['basedir'])
     return conf
 
