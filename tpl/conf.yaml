@@ -2,6 +2,12 @@
 # in the 'folders_on_host' entry below
 active_app: daiquiri
 
+enable_containers:
+    daiquiri: True
+    pgapp: True
+    pgdata: True
+    wpdb: True
+
 enable_database_volumes:
     pgapp: False
     pgdata: True

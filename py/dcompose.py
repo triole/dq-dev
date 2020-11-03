@@ -54,20 +54,28 @@ class DCompose():
                 return img
         return None
 
+    def container_enabled(self, container_name):
+        try:
+            return self.profconf['conf']['enable_containers'][container_name]
+        except KeyError:
+            return False
+
     # template
     def make_template(self):
         self.dcyaml['version'] = '3.7'
         self.dcyaml['services'] = {}
         self.dcyaml['volumes'] = {}
+
         for service in self.profconf['conf']['env']:
-            c = self.nam_img(service)
-            self.dcyaml['services'][c] = {}
-            self.dcyaml['services'][c]['build'] = {}
-            self.dcyaml['services'][c]['build']['context'] =\
-                '../../../docker/' + service
-            self.dcyaml['services'][c]['container_name'] =\
-                self.nam_con(service)
-            self.dcyaml['services'][c]['restart'] = 'always'
+            if self.container_enabled(service) is True:
+                c = self.nam_img(service)
+                self.dcyaml['services'][c] = {}
+                self.dcyaml['services'][c]['build'] = {}
+                self.dcyaml['services'][c]['build']['context'] =\
+                    '../../../docker/' + service
+                self.dcyaml['services'][c]['container_name'] =\
+                    self.nam_con(service)
+                self.dcyaml['services'][c]['restart'] = 'always'
 
     # depends on
     def add_depends_on(self):
@@ -94,8 +102,11 @@ class DCompose():
                 key = ''.join(re.findall('[A-Z0-9]', mp.upper()))
                 val = self.profconf['conf']['docker_volume_mountpoints'][mp]
                 env.append(key + '=' + val)
-
-            self.dcyaml['services'][self.nam_img(service)]['environment'] = env
+            # try because exception occurs when a container is disabled
+            try:
+                self.dcyaml['services'][self.nam_img(service)]['environment'] = env
+            except KeyError:
+                pass
 
     # ports
     def add_ports(self):
@@ -107,7 +118,11 @@ class DCompose():
                 pass
             if p is None:
                 p = []
-            self.dcyaml['services'][self.nam_img(service)]['ports'] = p
+            # same as in the last lines of add_env
+            try:
+                self.dcyaml['services'][self.nam_img(service)]['ports'] = p
+            except KeyError:
+                pass
 
     # volumes
     def add_volumes(self):
