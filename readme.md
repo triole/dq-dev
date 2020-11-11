@@ -4,13 +4,16 @@
 
 1.	[Synopsis](#synopsis)
 2.	[How to use](#how-to-use)
-3.	[Tech background](#tech-background)
+3.	[From scratch](#from-scratch)
+4.	[Tech background](#tech-background)
 	1.	[Dependencies](#dependencies)
 	2.	[Tests](#tests)<!--- mdtoc: toc end -->
 
 ## Synopsis
 
 My personal daiquiri dev setup. Shell tools are mounted by a volume called `shed` and reside in the equally named folder. The mountpoint of this folder is in $PATH.
+
+[docker compose](https://github.com/docker/compose/releases) is required to run the containers.
 
 ## How to use
 
@@ -32,6 +35,35 @@ python manage.py -r
 Note that `-r` can also take a profile name as argument. But if none given the active profile will be used for the action. Same for other commands. The idea behind the `active profile` is that one does not have to pass the profile name as argument to the command one wants to run.
 
 Profiles are saved in `usr/profiles/PROFILENAME`. Make sure you edit the `conf.yaml` there to adjust the settings you want to use.
+
+## From scratch
+
+Following directories should be present for a default app setup. 
+
+```bash
+mkdir dq-project
+cd dq-project
+
+# clones daiquiri source into folder daiquiri
+git clone git@github.com:django-daiquiri/daiquiri.git
+
+# clones default app into app folder
+git clone git@github.com:django-daiquiri/app.git
+
+# clones the dq-dev setup into dq-dev folder
+git clone git@github.com:triole/dq-dev.git
+```
+Edit the configuration for the dq-dev setup:
+
+```bash
+cd dq-dev
+nano tpl/conf.yaml
+```
+You can have multiple apps on the system. Active app is set via `active_app` entry, `daiquiri` is the default app. Make sure, to check the paths n `folders_on_host` section pointing them to your directories. In case it is needed, make the DB persistent in the `enable_database_volumes` section.
+
+Set and activate the profile as shown in the previous section. Run the setup. 
+
+The instance will be available on `localhost:9280` for the default settings. 
 
 ## Tech background
 
