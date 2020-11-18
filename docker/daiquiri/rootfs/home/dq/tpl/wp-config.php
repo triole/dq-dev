@@ -27,10 +27,10 @@ define('SITECOOKIEPATH', COOKIEPATH);
 define('ADMIN_COOKIE_PATH', COOKIEPATH);
 define('PLUGINS_COOKIE_PATH', COOKIEPATH);
 
-define('WP_HOME', 'https://<URL_BASE>/cms' );
-define('WP_SITEURL', 'https://<URL_BASE>/cms');
+define('WP_HOME', '<URL_BASE>/cms' );
+define('WP_SITEURL', '<URL_BASE>/cms');
 
-define('DAIQUIRI_URL', 'https://<URL_BASE>');
+define('DAIQUIRI_URL', '<URL_BASE>');
 // define('DAIQUIRI_URL', 'http://localhost:80');
 
 /**#@+
