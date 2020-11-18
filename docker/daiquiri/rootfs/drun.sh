@@ -7,12 +7,6 @@ ${HOME}/sh/install-daiquiri.sh
 
 cd "${DQAPP}" || exit 1
 
-# install custom and fixture app scripts if there
-if [ -f "${DQAPP}/install-custom.sh" ]; then
-    echo "Run ${DQAPP} custom installation and fixture script..."
-    ${DQAPP}/install-custom.sh
-fi
-
 sfil="${HOME}/tpl/wsgi.py"
 tfil="${DQAPP}/config/wsgi.py"
 if [[ ! -f "${tfil}" ]]; then
@@ -27,6 +21,12 @@ ${HOME}/sh/expand-env-vars.sh \
     "${HOME}/tpl/Caddyfile.tpl" "${HOME}/Caddyfile"
 
 ${HOME}/sh/init-wordpress.sh
+
+# install custom and fixture app scripts if there
+if [ -f "${DQAPP}/install-custom.sh" ]; then
+    echo "Run ${DQAPP} custom installation and fixture script..."
+    ${DQAPP}/install-custom.sh
+fi
 
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
