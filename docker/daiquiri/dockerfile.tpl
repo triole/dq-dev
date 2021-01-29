@@ -33,6 +33,8 @@ RUN mkdir -p /run/php \
 RUN pip3 install --upgrade pip && pip3 install gunicorn
 RUN ln -sf /usr/bin/python3 /usr/bin/python
 
+<ADDITIONAL_PACKAGES>
+
 WORKDIR /tmp
 RUN curl -O https://wordpress.org/latest.tar.gz \
  && mkdir -p "${WORDPRESS_PATH}" \
@@ -53,7 +55,6 @@ RUN ln -s /vol/tools/shed/caddy /bin/caddy
 
 RUN groupadd -g "${GID}" "${GNAME}" \
  && useradd -m -s /bin/bash -g "${GNAME}" -u "${UID}" "${USER}" \
- && adduser "${USER}" "sudo" \
  && chown -R "${USER}:${GID}" "${HOME}" \
  && chmod -R 777 /tmp /var/log
 

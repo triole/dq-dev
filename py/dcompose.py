@@ -23,14 +23,22 @@ class DCompose():
             arr[i] = self.expand_vars(arr[i])
         return arr
 
-    def expand_vars(self, str):
-        return str\
+    def expand_vars(self, str, container_name=None):
+        str = str\
             .replace('<HOME>', os.environ['HOME'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
             .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
             .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))\
             .replace('<UID>', self.conf['user']['idstr'])\
             .replace('<GID>', self.conf['user']['groupstr'])
+        if container_name is not None:
+            try:
+                p = ' '.join(self.profconf['conf']['additional_packages'][container_name])
+            except KeyError:
+                str = str.replace('<ADDITIONAL_PACKAGES>', '')
+            else:
+                str = str.replace('<ADDITIONAL_PACKAGES>', 'RUN apt install -y ' + p)
+        return str
 
     # service and container names
     def make_names(self):
@@ -241,16 +249,19 @@ class DCompose():
             self.render_template_file(fn)
 
     def render_template_file(self, filename):
+        container_name = rxsearch(
+            r'[a-z0-9A-Z-]+(?=/dockerfile.tpl$)', filename
+        )
         new_filename = rxsearch(r'.*(?=\.)', filename)
-        r = []
+        arr = []
         try:
             filecontent = open(filename, 'r')
         except Exception as e:
             raise(e)
         else:
             for line in filecontent.read().splitlines():
-                r.append(self.expand_vars(line))
-        write_array_to_file(r, new_filename)
+                arr.append(self.expand_vars(line, container_name))
+        write_array_to_file(arr, new_filename)
 
     # main
     def render_dc_yaml(self, profname=None):
