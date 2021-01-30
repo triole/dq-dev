@@ -94,4 +94,4 @@ env:
         - MYSQL_HOSTNAME=<CONTAINER_WPDB>
 
     rabbitmq:
-        - PLACEHOLDER=EMPTY
+        - RABBITMQ_LOGS=-
