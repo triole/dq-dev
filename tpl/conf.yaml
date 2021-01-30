@@ -7,6 +7,7 @@ enable_containers:
     pgapp: True
     pgdata: True
     wpdb: True
+    rabbitmq: True
 
 enable_database_volumes:
     pgapp: False
@@ -90,3 +91,6 @@ env:
         - MYSQL_PASSWORD=wordpress
         - MYSQL_PORT=3306
         - MYSQL_HOSTNAME=<CONTAINER_WPDB>
+
+    rabbitmq:
+        - PLACEHOLDER=EMPTY
