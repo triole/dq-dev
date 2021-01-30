@@ -62,13 +62,14 @@ env:
         - ALLOWED_HOSTS=*
         - SECRET_KEY=verysecretkey
         - DEBUG=True
-        - ASYNC=False
         - ACCOUNT_EMAIL_VERIFICATION=optional
         - ARCHIVE_BASE_PATH=/tmp/files
         - ARCHIVE_DOWNLOAD_DIR=/tmp/download
         - FILES_BASE_PATH=/tmp/files
         - QUERY_DOWNLOAD_DIR=/tmp/download
         - QUERY_UPLOAD_DIR=/tmp/upload
+        - ASYNC=False
+        - CELERY_BROKER_URL=amqp://gaia:password@<CONTAINER_RABBITMQ>:5672/gaia
 
     pgapp:
         - POSTGRES_HOST=pgapp
