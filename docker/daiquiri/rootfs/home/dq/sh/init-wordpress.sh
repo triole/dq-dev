@@ -5,8 +5,8 @@ wp core install \
     --url="http://localhost:${EXPOSED_PORT}${WORDPRESS_URL}" \
     --title="${WORDPRESS_TITLE}" \
     --admin_user=dqadmin \
-    --admin_email=admin@dqdev.de \
-    --admin_password=14rets6dyfufhgji789 \
+    --admin_email=dqadmin@sirrah.de \
+    --admin_password=4fb4cb000853f6cc7a6012202d2af4e3 \
     --skip-email
 
 wp plugin activate --path=${WORDPRESS_PATH} daiquiri
