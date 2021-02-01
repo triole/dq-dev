@@ -94,4 +94,8 @@ env:
         - MYSQL_HOSTNAME=<CONTAINER_WPDB>
 
     rabbitmq:
-        - RABBITMQ_LOGS=-
+        - RABBITMQ_USER=gaia
+        - RABBITMQ_PASSWORD=password
+        - RABBITMQ_VHOST=gaia
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=admin
