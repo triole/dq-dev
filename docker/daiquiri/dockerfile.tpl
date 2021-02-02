@@ -33,8 +33,6 @@ RUN mkdir -p /run/php \
 RUN pip3 install --upgrade pip && pip3 install gunicorn
 RUN ln -sf /usr/bin/python3 /usr/bin/python
 
-<ADDITIONAL_PACKAGES>
-
 WORKDIR /tmp
 RUN curl -O https://wordpress.org/latest.tar.gz \
  && mkdir -p "${WORDPRESS_PATH}" \
@@ -49,6 +47,8 @@ RUN git clone \
 RUN git clone \
     https://github.com/django-daiquiri/wordpress-theme \
     ${WORDPRESS_PATH}/wp-content/themes/daiquiri
+
+# RUN apt install -y <ADDITIONAL_PACKAGES>
 
 COPY ./rootfs /
 RUN ln -s /vol/tools/shed/caddy /bin/caddy

@@ -2,7 +2,7 @@ import os
 import re
 from os.path import join as pj
 
-from util import find, rxsearch
+from util import find, rxsearch, uncomment_line
 
 scriptname = os.path.realpath(__file__)
 scriptdir = '/'.join(scriptname.split('/')[:-1])
@@ -29,3 +29,11 @@ def test_rxsearch():
     assert rxsearch('.*', 'hello world') == 'hello world'
     assert rxsearch('.*?o', 'hello world') == 'hello'
     assert rxsearch('(?=.*?o).*(rld)', 'hello world', 1) == 'rld'
+
+
+def test_uncomment_line():
+    assert uncomment_line('hello world') == 'hello world'
+    assert uncomment_line('#hello world') == 'hello world'
+    assert uncomment_line('# hello world') == 'hello world'
+    assert uncomment_line('#  hello world') == 'hello world'
+    assert uncomment_line('#     hello world') == 'hello world'

@@ -2,6 +2,6 @@ FROM mysql:5.7
 
 RUN apt update -y
 
-<ADDITIONAL_PACKAGES>
+# RUN apt install -y <ADDITIONAL_PACKAGES>
 
 RUN sed -i -e 's/^\(mysql:[^:]\):[0-9]*:[0-9]*:/\1:<UID>:<GID>:/' /etc/passwd

@@ -94,6 +94,13 @@ def rxbool(rx, s):
     return bool(re.search(rx, s))
 
 
+def uncomment_line(line):
+    rx = r'(#\s*)(.*)'
+    if rxbool(rx, line) is True:
+        line = rxsearch(rx, line, 2)
+    return line
+
+
 def path_after_last_slash(s):
     return rxsearch('[^' + sep + ']+$', s)
 
