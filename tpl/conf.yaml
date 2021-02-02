@@ -99,6 +99,7 @@ env:
         - RABBITMQ_VHOST=gaia
         - RABBITMQ_DEFAULT_USER=admin
         - RABBITMQ_DEFAULT_PASS=admin
+        - RABBITMQ_LOGS=-
 
 # define additional packages that are installed during the docker container
 # build process from the base image's repositories, uncomment below
