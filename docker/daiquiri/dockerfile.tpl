@@ -13,6 +13,7 @@ ENV WORDPRESS_PATH=/home/dq/wp
 RUN apt update -y && apt install -y \
     curl \
     git \
+    netcat \
     php7.3 \
     php7.3-cli \
     php7.3-fpm \
