@@ -48,12 +48,13 @@ RUN git clone \
     https://github.com/django-daiquiri/wordpress-theme \
     ${WORDPRESS_PATH}/wp-content/themes/daiquiri
 
+# RUN apt install -y <ADDITIONAL_PACKAGES>
+
 COPY ./rootfs /
 RUN ln -s /vol/tools/shed/caddy /bin/caddy
 
 RUN groupadd -g "${GID}" "${GNAME}" \
  && useradd -m -s /bin/bash -g "${GNAME}" -u "${UID}" "${USER}" \
- && adduser "${USER}" "sudo" \
  && chown -R "${USER}:${GID}" "${HOME}" \
  && chmod -R 777 /tmp /var/log
 

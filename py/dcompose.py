@@ -1,16 +1,17 @@
 import os
 import re
+import sys
 from os.path import join as pj
 from sys import exit as x
 
 from py.colours import Colours
 from py.util import (find, is_git, mkdir, pprint, rxbool, rxsearch,
-                     write_array_to_file, write_yaml)
+                     uncomment_line, write_array_to_file, write_yaml)
 
 
 class DCompose():
     def __init__(self, conf, prof):
-        self.c = Colours()
+        self.col = Colours()
         self.conf = conf
         self.prof = prof
         self.dcyaml = {}
@@ -23,14 +24,39 @@ class DCompose():
             arr[i] = self.expand_vars(arr[i])
         return arr
 
-    def expand_vars(self, str):
-        return str\
+    def expand_vars(self, str, container_name=None):
+        str = str\
             .replace('<HOME>', os.environ['HOME'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
             .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
             .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))\
             .replace('<UID>', self.conf['user']['idstr'])\
             .replace('<GID>', self.conf['user']['groupstr'])
+        if container_name is not None:
+            try:
+                p = ' '.join(self.profconf['conf']['additional_packages'][container_name])
+            except KeyError:
+                pass
+            except TypeError:
+                print(
+                    self.col.err() +
+                    self.col.yel(
+                        'Please check additional packages config entry for '
+                    ) +
+                    container_name +
+                    self.col.yel(' and make sure it is a not empty list.')
+                )
+                print(
+                    'If you do not wish to use additional packages remove ' +
+                    ' or comment the whole list entry.'
+                )
+                sys.exit()
+            else:
+                var = '<ADDITIONAL_PACKAGES>'
+                if var in str:
+                    str = str.replace('<ADDITIONAL_PACKAGES>', p)
+                    str = uncomment_line(str)
+        return str
 
     # service and container names
     def make_names(self):
@@ -202,8 +228,8 @@ class DCompose():
 
         if is_dir is False and vol['required_git'] is False:
             print(
-                'Run without volume ' + self.c.yel(vol['name']) +
-                '. Path does not exist on host ' + self.c.yel(dev)
+                'Run without volume ' + self.col.yel(vol['name']) +
+                '. Path does not exist on host ' + self.col.yel(dev)
             )
 
         if is_dir is True:
@@ -213,10 +239,10 @@ class DCompose():
             ig = is_git(dev)
             if ig[0] is False:
                 print(
-                    '\n' + self.c.err() + 'Folder ' + self.c.yel(dev) +
+                    '\n' + self.col.err() + 'Folder ' + self.col.yel(dev) +
                     ' does not look like a git repo. ' +
                     '\nPlease make sure that it contains the source of ' +
-                    self.c.yel(vol['name']) + '\n'
+                    self.col.yel(vol['name']) + '\n'
                 )
                 x(1)
             else:
@@ -225,32 +251,35 @@ class DCompose():
 
     def write_yaml(self):
         if self.conf['dry_run'] is True:
-            print(self.c.yel('\nDry run, dc yaml would look like this:'))
+            print(self.col.yel('\nDry run, dc yaml would look like this:'))
             pprint(self.dcyaml)
         else:
             print(
                 'Write dc yaml to ' +
-                self.c.yel(self.profconf['dc_yaml'])
+                self.col.yel(self.profconf['dc_yaml'])
             )
             write_yaml(self.dcyaml, self.profconf['dc_yaml'])
 
     def render_dockerfile_templates(self):
         arr = find(self.conf['basedir'], '.*/dockerfile.tpl', 'f')
         for fn in arr:
-            print('Render dockerfile template ' + self.c.yel(fn))
+            print('Render dockerfile template ' + self.col.yel(fn))
             self.render_template_file(fn)
 
     def render_template_file(self, filename):
+        container_name = rxsearch(
+            r'[a-z0-9A-Z-]+(?=/dockerfile.tpl$)', filename
+        )
         new_filename = rxsearch(r'.*(?=\.)', filename)
-        r = []
+        arr = []
         try:
             filecontent = open(filename, 'r')
         except Exception as e:
             raise(e)
         else:
             for line in filecontent.read().splitlines():
-                r.append(self.expand_vars(line))
-        write_array_to_file(r, new_filename)
+                arr.append(self.expand_vars(line, container_name))
+        write_array_to_file(arr, new_filename)
 
     # main
     def render_dc_yaml(self, profname=None):

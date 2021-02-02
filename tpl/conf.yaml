@@ -90,3 +90,18 @@ env:
         - MYSQL_PASSWORD=wordpress
         - MYSQL_PORT=3306
         - MYSQL_HOSTNAME=<CONTAINER_WPDB>
+
+# define additional packages that are installed during the docker container
+# build process from the base image's repositories, uncomment below
+# additional_packages:
+#     daiquiri:
+#         - wget
+#
+#     pgapp:
+#         - procps
+#
+#     pgdata:
+#         - procps
+#
+#     wpdb:
+#         - procps
