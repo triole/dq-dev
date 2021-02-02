@@ -7,7 +7,7 @@ enable_containers:
     pgapp: True
     pgdata: True
     wpdb: True
-    rabbitmq: True
+    rabbitmq: False
 
 enable_database_volumes:
     pgapp: False
