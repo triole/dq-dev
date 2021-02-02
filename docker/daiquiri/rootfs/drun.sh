@@ -40,5 +40,9 @@ if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
     #     config.wsgi:application -D
 fi
 
+if [[ "${ASYNC}" == "True" ]]; then
+    ${HOME}/sh/init-rabbitmq-workers.sh &
+fi
+
 /usr/sbin/php-fpm7.3
 caddy run --config ${HOME}/Caddyfile --adapter caddyfile --watch

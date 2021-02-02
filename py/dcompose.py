@@ -30,6 +30,7 @@ class DCompose():
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
             .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
             .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))\
+            .replace('<CONTAINER_RABBITMQ>', self.nam_con('rabbitmq'))\
             .replace('<UID>', self.conf['user']['idstr'])\
             .replace('<GID>', self.conf['user']['groupstr'])
         if container_name is not None:
