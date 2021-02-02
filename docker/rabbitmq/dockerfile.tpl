@@ -16,6 +16,6 @@ RUN groupadd -g "${GID}" "${GNAME}" \
 USER ${USER}
 
 HEALTHCHECK --timeout=3s --interval=60s --retries=3 \
-     CMD rabbitmq-diagnostics -q ping
+    CMD rabbitmq-diagnostics -q ping
 
-CMD ${HOME}/sh/launch-rabbitmq.sh
+CMD ["/drun.sh"]
