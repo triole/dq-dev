@@ -22,6 +22,9 @@ ${HOME}/sh/expand-env-vars.sh \
 
 ${HOME}/sh/init-wordpress.sh
 
+# needs to be run after init wordpress because dq creates wp subscribe user
+${HOME}/sh/create-dq-admin-user.sh
+
 # install custom and fixture app scripts if there
 if [ -f "${DQAPP}/install-custom.sh" ]; then
     echo "Run ${DQAPP} custom installation and fixture script..."

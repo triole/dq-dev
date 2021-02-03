@@ -48,7 +48,15 @@ exposed_ports:
 env:
     daiquiri:
         - URL_BASE=http://localhost:9280
-        - SERVER_HTTPS=on
+        - SERVER_HTTPS=False
+        # default user settings below, it is highly recommended to change these
+        - DAIQUIRI_ADMIN_USER=dqadmin
+        - DAIQUIRI_ADMIN_PASSWORD=dqadmin
+        - DAIQUIRI_ADMIN_EMAIL=dqadmin@dqdev.de
+        - WORDPRESS_ADMIN_USER=wpadmin
+        - WORDPRESS_ADMIN_PASSWORD=wpadmin
+        - WORDPRESS_ADMIN_EMAIL=wpadmin@dqdev.de
+        # wordpress related
         - WORDPRESS_TITLE=dqdev
         - WORDPRESS_URL=/cms/
         - WORDPRESS_CLI=/usr/bin/wp
@@ -114,4 +122,7 @@ env:
 #         - procps
 #
 #     wpdb:
+#         - procps
+#
+#     rabbitmq:
 #         - procps
