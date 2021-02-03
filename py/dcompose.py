@@ -115,25 +115,28 @@ class DCompose():
     # env
     def add_env(self):
         for service in self.profconf['conf']['env']:
-            env = self.expand_vars_arr(self.profconf['conf']['env'][service])
-
             try:
-                exposed_ports = self.profconf['conf']['exposed_ports'][service]
+                env = self.expand_vars_arr(self.profconf['conf']['env'][service])
             except KeyError:
                 pass
-            if exposed_ports is not None:
-                p = exposed_ports[0].split(':')[0]
-                env.append('EXPOSED_PORT=' + str(p))
+            else:
+                try:
+                    exposed_ports = self.profconf['conf']['exposed_ports'][service]
+                except KeyError:
+                    pass
+                if exposed_ports is not None:
+                    p = exposed_ports[0].split(':')[0]
+                    env.append('EXPOSED_PORT=' + str(p))
 
-            for mp in self.profconf['conf']['docker_volume_mountpoints']:
-                key = ''.join(re.findall('[A-Z0-9]', mp.upper()))
-                val = self.profconf['conf']['docker_volume_mountpoints'][mp]
-                env.append(key + '=' + val)
-            # try because exception occurs when a container is disabled
-            try:
-                self.dcyaml['services'][self.nam_img(service)]['environment'] = env
-            except KeyError:
-                pass
+                for mp in self.profconf['conf']['docker_volume_mountpoints']:
+                    key = ''.join(re.findall('[A-Z0-9]', mp.upper()))
+                    val = self.profconf['conf']['docker_volume_mountpoints'][mp]
+                    env.append(key + '=' + val)
+                # try because exception occurs when a container is disabled
+                try:
+                    self.dcyaml['services'][self.nam_img(service)]['environment'] = env
+                except KeyError:
+                    pass
 
     # ports
     def add_ports(self):
