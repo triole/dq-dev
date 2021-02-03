@@ -6,6 +6,8 @@ ENV GNAME=dq
 ENV GID=<GID>
 ENV HOME=/home/dq
 
+RUN apt update -y
+
 COPY ./rootfs /
 
 RUN groupadd -g "${GID}" "${GNAME}" \
