@@ -1,15 +1,16 @@
 alias env="env | sort"
 alias p="python"
-alias pm='python manage.py'
-alias psa='ps faux'
+alias pm="python manage.py"
+alias psa="ps faux"
 alias tailf="tail -F"
-alias tlp='netstat -tulpen'
-alias tlps='sudo netstat -tulpen'
+alias tlp="netstat -tulpen"
+alias tlps="sudo netstat -tulpen"
 alias we="watchexec"
+alias wp="wp --path=${WORDPRESS_PATH}"
 
-# don't have exa? you'd probably enjoy https://github.com/ogham/exa.git
-export EXA_COLORS="da=1;34:gm=1;34:di=1;34:b0=1;31"
-alias ll="exa --long --group --header --modified --git --group-directories-first"
-alias la="exa --long --group --header --modified --created --accessed --git --all --group-directories-first"
+export LS_COLORS=${LS_COLORS}:"di=1;34":"*.txt=1;36":"*.md=0;93"
+alias l="ls --color=auto -CF"
+alias ll="ls --color=auto -alF"
+alias la="ls --color=auto -A"
 
 cd "${HOME}"
