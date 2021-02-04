@@ -6,11 +6,14 @@ port=$(echo "${CELERY_BROKER_URL}" | grep -Po "(?<=:)[0-9]+")
 max_wait=60
 
 function run_workers() {
-    echo "Init rabbitmq workers"
+    echo "Init celery workers ..."
     cd "${DQAPP}"
-    python manage.py runworker default
-    python manage.py runworker query
-    python manage.py runworker download
+    echo "Starts default worker"
+    python manage.py runworker default &
+    echo "Starts query worker"
+    python manage.py runworker query &
+    echo "Starts download worker"
+    python manage.py runworker download &
 }
 
 function is_broker_up() {
@@ -33,3 +36,5 @@ function init_workers() {
 }
 
 init_workers
+
+echo "... Celery workers have started"
