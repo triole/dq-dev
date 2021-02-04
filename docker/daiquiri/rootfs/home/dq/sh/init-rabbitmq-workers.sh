@@ -8,11 +8,11 @@ max_wait=60
 function run_workers() {
     echo "Init celery workers ..."
     cd "${DQAPP}"
-    echo "Starts default worker"
+    echo "Start default worker"
     python manage.py runworker default &
-    echo "Starts query worker"
+    echo "Start query worker"
     python manage.py runworker query &
-    echo "Starts download worker"
+    echo "Start download worker"
     python manage.py runworker download &
 }
 
@@ -36,5 +36,3 @@ function init_workers() {
 }
 
 init_workers
-
-echo "... Celery workers have started"
