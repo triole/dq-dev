@@ -21,7 +21,10 @@ ${HOME}/sh/expand-env-vars.sh \
     "${HOME}/tpl/Caddyfile.tpl" "${HOME}/Caddyfile"
 
 ${HOME}/sh/init-wordpress.sh
-${HOME}/sh/init-folders.sh
+
+if [[ "${ASYNC}" == "True" ]]; then
+    ${HOME}/sh/init-folders.sh
+fi
 
 # install custom and fixture app scripts if there
 if [ -f "${DQAPP}/install-custom.sh" ]; then
