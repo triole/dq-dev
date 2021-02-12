@@ -1,6 +1,6 @@
 [{
     "srcDir": ".",
-    "destDir": "/tmp",
+    "destDir": "/tmp/.onsave",
     "files": "**",
     "command": "coda -t '${srcFile}'",
     "showOutput": false,
