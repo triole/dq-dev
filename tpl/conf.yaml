@@ -70,7 +70,7 @@ env:
         - FILES_BASE_URL=<URL_BASE>/files
         - QUERY_DOWNLOAD_DIR=/tmp/download
         - QUERY_UPLOAD_DIR=/tmp/upload
-        - LOG_DIR=/dev/stdout
+        - LOG_DIR=/var/log
         - LOG_LEVEL=INFO
         - TAP_SCHEMA=tap_schema
         - OAI_SCHEMA=oai_schema
