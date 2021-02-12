@@ -48,6 +48,7 @@ exposed_ports:
 env:
     daiquiri:
         - URL_BASE=http://localhost:9280
+        - SITE_URL=<URL_BASE>
         - SERVER_HTTPS=on
         - WORDPRESS_TITLE=dqdev
         - WORDPRESS_URL=/cms/
@@ -66,8 +67,14 @@ env:
         - ARCHIVE_BASE_PATH=/tmp/files
         - ARCHIVE_DOWNLOAD_DIR=/tmp/download
         - FILES_BASE_PATH=/tmp/files
+        - FILES_BASE_URL=<URL_BASE>/files
         - QUERY_DOWNLOAD_DIR=/tmp/download
         - QUERY_UPLOAD_DIR=/tmp/upload
+        - LOG_DIR=/dev/stdout
+        - LOG_LEVEL=INFO
+        - TAP_SCHEMA=tap_schema
+        - OAI_SCHEMA=oai_schema
+        - TAP_UPLOAD=tap_upload
         - ASYNC=False
         - CELERY_BROKER_URL=amqp://gaia:password@<CONTAINER_RABBITMQ>:5672/gaia
 

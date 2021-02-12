@@ -19,12 +19,15 @@ class DCompose():
         self.names = {}
         self.volumes = []
 
-    def expand_vars_arr(self, arr):
+    def expand_vars_arr(self, arr, container_name=None):
         for i, el in enumerate(arr):
-            arr[i] = self.expand_vars(arr[i])
+            arr[i] = self.expand_vars(arr[i], container_name)
         return arr
 
     def expand_vars(self, str, container_name=None):
+        if '<' not in str and '>' not in str:
+            return str
+        # expand variables set in config
         str = str\
             .replace('<HOME>', os.environ['HOME'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
@@ -33,6 +36,18 @@ class DCompose():
             .replace('<CONTAINER_RABBITMQ>', self.nam_con('rabbitmq'))\
             .replace('<UID>', self.conf['user']['idstr'])\
             .replace('<GID>', self.conf['user']['groupstr'])
+        # expand env var placeholders set in other env vars
+        if container_name is not None:
+            try:
+                env_vars = self.profconf['conf']['env'][container_name]
+            except KeyError:
+                pass
+            else:
+                for env_var in env_vars:
+                    key, val = env_var.split('=')
+                    if key != "" and val != "":
+                        str = str.replace('<' + key.upper() + '>', val)
+        # add additional packages
         if container_name is not None:
             try:
                 p = ' '.join(self.profconf['conf']['additional_packages'][container_name])
@@ -116,7 +131,7 @@ class DCompose():
     def add_env(self):
         for service in self.profconf['conf']['env']:
             try:
-                env = self.expand_vars_arr(self.profconf['conf']['env'][service])
+                env = self.expand_vars_arr(self.profconf['conf']['env'][service], service)
             except KeyError:
                 pass
             else:
