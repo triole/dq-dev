@@ -4,6 +4,7 @@ folder_env_var_list=(
     "ARCHIVE_BASE_PATH"
     "ARCHIVE_DOWNLOAD_DIR"
     "FILES_BASE_PATH"
+    "LOG_DIR"
     "QUERY_DOWNLOAD_DIR"
     "QUERY_UPLOAD_DIR"
 )
