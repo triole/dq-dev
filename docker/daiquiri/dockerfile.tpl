@@ -25,7 +25,13 @@ RUN apt update -y && apt install -y \
     python3-psycopg2 \
     net-tools \
     procps \
-    vim
+    vim \
+    libxml2-dev \
+    libxslt-dev \
+    zlib1g-dev \
+    libssl-dev \
+    postgresql-client
+
 RUN pear install http_request2
 
 RUN mkdir -p /run/php \
