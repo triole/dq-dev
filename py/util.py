@@ -1,6 +1,8 @@
 import os
 import pprint as ppr
 import re
+import sys
+from os.path import isdir
 from os.path import join as pj
 from os.path import sep as sep
 from subprocess import PIPE, Popen
@@ -24,6 +26,15 @@ def find(root, filter='.*', filter_type='f'):
                 if bool(re.search(filter, rdir)) is True:
                     detected.append(rdir)
     return(sorted(detected))
+
+
+def listdirs_only(root):
+    p = os.listdir(root)
+    r = []
+    for i in p:
+        if isdir(pj(root, i)):
+            r.append(i)
+    return sorted(r)
 
 
 def run_cmd(cmd, silent=True, debug=False):
@@ -63,7 +74,11 @@ def mkdir(dir):
         os.makedirs(dir)
 
 
-def read_yaml(filename):
+def read_yaml(filename, check_file=True):
+    if check_file is True:
+        if os.path.isfile(filename) is False:
+            print('yaml file does not exist: ' + filename)
+            sys.exit()
     with open(filename, 'r') as stream:
         try:
             return(yaml.safe_load(stream))

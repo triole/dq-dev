@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import argparse
 import os
+from sys import exit as x
 
 from py.colours import Colours
 from py.dcompose import DCompose
@@ -12,7 +13,8 @@ from py.util import pprint
 parser = argparse.ArgumentParser(
     description=os.path.basename(__file__).title() + ': ' +
     'dq-dev, daiquiri docker compose dev setup',
-    formatter_class=argparse.RawTextHelpFormatter
+    epilog='If used without arg, profile list will be displayed\n',
+    formatter_class=argparse.RawDescriptionHelpFormatter
 )
 parser.add_argument(
     '-r', '--run', type=str, nargs='*', default=None,
@@ -55,15 +57,15 @@ parser.add_argument(
     help='display currently active profile'
 )
 parser.add_argument(
-    '-l', '--list_profiles', action='store_true', default=False,
-    help='list all available profiles'
-)
-parser.add_argument(
     '-n', '--dry_run', action='store_true', default=False,
     help=(
         'do not run any docker-compose commands nor ' +
         'save rendered docker-compose.yaml, just print them'
     )
+)
+parser.add_argument(
+    '-v', '--verbose', action='store_true', default=False,
+    help=('verbose mode, print a lot more')
 )
 args = parser.parse_args()
 
@@ -73,9 +75,10 @@ if __name__ == '__main__':
     conf = init(args)
     prof = Profile(conf)
     dco = DCompose(conf, prof)
-    pprint(conf)
-    if args.list_profiles is True:
+
+    if conf['args']['list'] is True:
         prof.list()
+        x()
 
     if args.create_profile is not None:
         prof.create(args.create_profile)
@@ -99,7 +102,7 @@ if __name__ == '__main__':
         dco.render_dc_yaml(conf['args']['run'])
         dco.render_dockerfile_templates()
         run = Runner(
-            prof.get_profile_yaml_by_name(conf['args']['run']),
+            conf['files']['dc_yaml'],
             args.dry_run
         )
         run.start()

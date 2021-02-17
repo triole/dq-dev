@@ -39,7 +39,7 @@ class DCompose():
         # expand env var placeholders set in other env vars
         if container_name is not None:
             try:
-                env_vars = self.profconf['conf']['env'][container_name]
+                env_vars = self.conf['conf']['env'][container_name]
             except KeyError:
                 pass
             else:
@@ -50,7 +50,9 @@ class DCompose():
         # add additional packages
         if container_name is not None:
             try:
-                p = ' '.join(self.profconf['conf']['additional_packages'][container_name])
+                p = ' '.join(
+                    self.conf['conf']['additional_packages'][container_name]
+                )
             except KeyError:
                 pass
             except TypeError:
@@ -76,12 +78,12 @@ class DCompose():
 
     # service and container names
     def make_names(self):
-        for service in self.profconf['conf']['env']:
+        for service in self.conf['conf']['env']:
             self.names[service] = {}
             self.names[service]['con'] =\
-                'dqdev' + '-' + service + '-' + self.profconf['name']
+                'dqdev' + '-' + service + '-' + self.conf['prof']['name']
             self.names[service]['img'] =\
-                'dqdev' + '_' + service + '_' + self.profconf['name']
+                'dqdev' + '_' + service + '_' + self.conf['prof']['name']
 
     def nam_img(self, service):
         return self.names[service]['img']
@@ -98,7 +100,7 @@ class DCompose():
 
     def container_enabled(self, container_name):
         try:
-            return self.profconf['conf']['enable_containers'][container_name]
+            return self.conf['conf']['enable_containers'][container_name]
         except KeyError:
             return False
 
@@ -108,7 +110,7 @@ class DCompose():
         self.dcyaml['services'] = {}
         self.dcyaml['volumes'] = {}
 
-        for service in self.profconf['conf']['env']:
+        for service in self.conf['conf']['env']:
             if self.container_enabled(service) is True:
                 c = self.nam_img(service)
                 self.dcyaml['services'][c] = {}
@@ -129,23 +131,25 @@ class DCompose():
 
     # env
     def add_env(self):
-        for service in self.profconf['conf']['env']:
+        for service in self.conf['conf']['env']:
             try:
-                env = self.expand_vars_arr(self.profconf['conf']['env'][service], service)
+                env = self.expand_vars_arr(
+                    self.conf['conf']['env'][service], service
+                )
             except KeyError:
                 pass
             else:
                 try:
-                    exposed_ports = self.profconf['conf']['exposed_ports'][service]
+                    exposed_ports = self.conf['conf']['exposed_ports'][service]
                 except KeyError:
                     pass
                 if exposed_ports is not None:
                     p = exposed_ports[0].split(':')[0]
                     env.append('EXPOSED_PORT=' + str(p))
 
-                for mp in self.profconf['conf']['docker_volume_mountpoints']:
+                for mp in self.conf['conf']['docker_volume_mountpoints']:
                     key = ''.join(re.findall('[A-Z0-9]', mp.upper()))
-                    val = self.profconf['conf']['docker_volume_mountpoints'][mp]
+                    val = self.conf['conf']['docker_volume_mountpoints'][mp]
                     env.append(key + '=' + val)
                 # try because exception occurs when a container is disabled
                 try:
@@ -155,10 +159,10 @@ class DCompose():
 
     # ports
     def add_ports(self):
-        for service in self.profconf['conf']['exposed_ports']:
+        for service in self.conf['conf']['exposed_ports']:
             try:
                 p =\
-                    self.profconf['conf']['exposed_ports'][service]
+                    self.conf['conf']['exposed_ports'][service]
             except KeyError:
                 pass
             if p is None:
@@ -187,24 +191,24 @@ class DCompose():
 
     def make_volumes(self):
         vols = []
-        for volname in self.profconf['conf']['docker_volume_mountpoints']:
+        for volname in self.conf['conf']['docker_volume_mountpoints']:
             try:
-                fol = self.profconf['conf']['folders_on_host'][volname]
+                fol = self.conf['conf']['folders_on_host'][volname]
             except KeyError:
-                fol = self.profconf['conf']['folders_on_host'][
-                    self.profconf['conf']['active_app']
+                fol = self.conf['conf']['folders_on_host'][
+                    self.conf['conf']['active_app']
                 ]
             v = self.make_volume(
                 volname + '_' + self.profconf['name'],
-                self.profconf['conf']['docker_volume_mountpoints'][volname],    # noqa: E501
+                self.conf['conf']['docker_volume_mountpoints'][volname],    # noqa: E501
                 fol,
                 volname.startswith('dq_')
             )
             if self.valid_volume(v) is True:
                 vols.append(v)
 
-        for volname in self.profconf['conf']['enable_database_volumes']:
-            if self.profconf['conf']['enable_database_volumes'][volname] is True:   # noqa: E501
+        for volname in self.conf['conf']['enable_database_volumes']:
+            if self.conf['conf']['enable_database_volumes'][volname] is True:   # noqa: E501
                 volfolder = pj(
                     self.prof.get_profile_folder_by_name(
                         self.profconf['name']
@@ -275,14 +279,14 @@ class DCompose():
         else:
             print(
                 'Write dc yaml to ' +
-                self.col.yel(self.profconf['dc_yaml'])
+                self.conf['files']['dc_yaml']
             )
-            write_yaml(self.dcyaml, self.profconf['dc_yaml'])
+            write_yaml(self.dcyaml, self.conf['files']['dc_yaml'])
 
     def render_dockerfile_templates(self):
         arr = find(self.conf['basedir'], '.*/dockerfile.tpl', 'f')
         for fn in arr:
-            print('Render dockerfile template ' + self.col.yel(fn))
+            # print('Render dockerfile template ' + self.col.yel(fn))
             self.render_template_file(fn)
 
     def render_template_file(self, filename):
