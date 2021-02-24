@@ -1,7 +1,11 @@
 [{
     "srcDir": ".",
     "destDir": "/tmp/.onsave",
-    "files": ["py/*.py", "test/*.sh"],
+    "files": [
+        "docker/**",
+        "py/*.py",
+        "test/*.sh"
+    ],
     "command": "coda -t '${srcFile}'",
     "showOutput": false,
     "showError": false
