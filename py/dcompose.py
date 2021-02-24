@@ -30,6 +30,7 @@ class DCompose():
         # expand variables set in config
         str = str\
             .replace('<HOME>', os.environ['HOME'])\
+            .replace('<ACTIVE_APP>', self.conf['conf']['active_app'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
             .replace('<CONTAINER_PGDATA>', self.nam_con('pgdata'))\
             .replace('<CONTAINER_WPDB>', self.nam_con('wpdb'))\
@@ -186,7 +187,7 @@ class DCompose():
             for vol in self.volumes:
                 if rxbool(vol['mount_inside'], service) is True:
                     self.dcyaml['services'][service]['volumes'].append(
-                        vol['name'] + ':' + vol['mp']
+                        vol['name'] + ':' + self.expand_vars(vol['mp'])
                     )
 
     def make_volumes(self):
