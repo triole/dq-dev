@@ -88,10 +88,7 @@ if __name__ == '__main__':
 
     if args.display_profile is not None:
         c = prof.read_profile_config(conf['args']['display_profile'])
-        print(
-            'Currently set profile',
-            col.yel(c['name'])
-        )
+        print('Currently set profile', col.yel(c['name']))
         pprint(c)
 
     if args.render is not None:
@@ -101,26 +98,17 @@ if __name__ == '__main__':
     if args.run is not None:
         dco.render_dc_yaml(conf['args']['run'])
         dco.render_dockerfile_templates()
-        run = Runner(
-            conf['files']['dc_yaml'],
-            args.dry_run
-        )
+        run = Runner(conf['files']['dc_yaml'], args.dry_run)
         run.start()
 
     if args.stop is not None:
-        run = Runner(
-            prof.get_profile_yaml_by_name(conf['args']['stop']),
-            args.dry_run
-        )
+        run = Runner(conf['files']['dc_yaml'], args.dry_run)
         run.stop()
 
     if args.down is not None:
-        run = Runner(
-            prof.get_profile_yaml_by_name(conf['args']['down']),
-            args.dry_run
-        )
+        run = Runner(conf['files']['dc_yaml'], args.dry_run)
         run.down(args.remove_images)
 
     if args.tail_logs is True:
-        run = Runner(prof.get_profile_conf_by_name(conf['args']['tail_logs']))
+        run = Runner(conf['files']['dc_yaml'])
         run.tail_logs()

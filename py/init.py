@@ -29,8 +29,10 @@ def init(args):
     conf['args']['set'] = args.set_profile
     conf['args']['create'] = args.create_profile
 
-    apc = read_yaml(conf['files']['active_conf'], check_file=False)
-    conf['prof']['name'] = apc['active_profile_name']
+    apc = read_yaml(conf['files']['active_conf'])
+    conf['prof']['name'] = ''
+    if apc is not None:
+        conf['prof']['name'] = apc['active_profile_name']
 
     for arg in conf['args']:
         if arg != 'list':
@@ -40,11 +42,6 @@ def init(args):
                 if isinstance(val, str):
                     conf['prof']['name'] = val
                 break
-    # ===== CONTINUE HERE
-
-    # conf['prof']['folder'] = pj(
-    #     conf['prof']['basedir'], conf['prof']['name']
-    # )
 
     # read base config
     c = pj(basedir, 'conf', 'baseconf.yaml')
@@ -53,15 +50,16 @@ def init(args):
     conf['conf'] = read_yaml(c)
 
     # read profile config
-    if isinstance(conf['prof']['name'], str) is False:
-        if os.path.isfile(conf['prof']['name']):
-            c = read_yaml(conf['prof']['name'])
-            conf['prof']['name'] = c['active_profile_name']
+    if os.path.isfile(conf['prof']['name']):
+        c = read_yaml(conf['prof']['name'])
+        conf['prof']['name'] = c['active_profile_name']
 
     conf['prof']['folder'] = pj(
         conf['prof']['basedir'], conf['prof']['name']
     )
-    conf['files']['dc_yaml'] = pj(conf['prof']['folder'], 'docker-compose.yaml')
+    conf['files']['dc_yaml'] = pj(
+        conf['prof']['folder'], 'docker-compose.yaml'
+    )
     conf['files']['prof_conf'] = pj(conf['prof']['folder'], 'conf.yaml')
 
     if conf['args']['set'] is None:
@@ -69,7 +67,7 @@ def init(args):
     if isfile(conf['files']['prof_conf']) is True:
         if conf['args']['set'] is None:
             print('Read prof config ' + col.yel(conf['files']['prof_conf']))
-        prof_conf = read_yaml(conf['files']['prof_conf'], check_file=False)
+        prof_conf = read_yaml(conf['files']['prof_conf'])
         # merge the two
         conf['conf'].update(prof_conf)
     else:

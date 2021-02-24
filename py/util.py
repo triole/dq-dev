@@ -1,7 +1,6 @@
 import os
 import pprint as ppr
 import re
-import sys
 from os.path import isdir
 from os.path import join as pj
 from os.path import sep as sep
@@ -74,16 +73,16 @@ def mkdir(dir):
         os.makedirs(dir)
 
 
-def read_yaml(filename, check_file=True):
-    if check_file is True:
-        if os.path.isfile(filename) is False:
-            print('yaml file does not exist: ' + filename)
-            sys.exit()
-    with open(filename, 'r') as stream:
-        try:
-            return(yaml.safe_load(stream))
-        except yaml.YAMLError as exc:
-            print(exc)
+def read_yaml(filename):
+    if os.path.isfile(filename) is False:
+        print('yaml file does not exist: ' + filename)
+    else:
+        with open(filename, 'r') as stream:
+            try:
+                return(yaml.safe_load(stream))
+            except yaml.YAMLError as exc:
+                print(exc)
+    return None
 
 
 def write_yaml(data, filename):
