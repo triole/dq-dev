@@ -3,6 +3,7 @@
 scriptdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 basedir=$(echo "${scriptdir}" | grep -Po ".*(?=/)")
 profdir="${basedir}/usr/profiles"
+active_yaml="${profdir}/active.yaml"
 spacer="\t::\t"
 cd "${basedir}"
 
@@ -41,6 +42,8 @@ function test() {
 }
 
 # main
+active_yaml_before="$(cat "${active_yaml}")"
+
 prof1="test_prof1"
 prof2="test_prof2"
 remove_profile "${prof1}"
@@ -61,3 +64,5 @@ test "-e" "/${prof2}/docker-compose.yaml"
 test "-e ${prof1}" "/${prof1}/docker-compose.yaml"
 remove_profile "${prof1}"
 remove_profile "${prof2}"
+
+echo "${active_yaml_before}" >"${active_yaml}"

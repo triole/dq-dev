@@ -13,7 +13,7 @@ from py.util import pprint
 parser = argparse.ArgumentParser(
     description=os.path.basename(__file__).title() + ': ' +
     'dq-dev, daiquiri docker compose dev setup',
-    epilog='If used without arg, profile list will be displayed\n',
+    epilog='If used without arg, profile list is displayed\n',
     formatter_class=argparse.RawDescriptionHelpFormatter
 )
 parser.add_argument(
@@ -34,7 +34,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '-rmi', '--remove_images', action='store_true', default=False,
-    help='remove images when running "down", used in combination "-d -rmi"\n\n'
+    help='remove images when running "down", use in combination "-d -rmi"\n\n'
 )
 parser.add_argument(
     '-g', '--tail_logs', type=str, nargs='*', default=None,
@@ -62,10 +62,6 @@ parser.add_argument(
         'do not run any docker-compose commands nor ' +
         'save rendered docker-compose.yaml, just print them'
     )
-)
-parser.add_argument(
-    '-v', '--verbose', action='store_true', default=False,
-    help=('verbose mode, print a lot more')
 )
 args = parser.parse_args()
 
