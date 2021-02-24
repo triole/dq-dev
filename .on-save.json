@@ -1,7 +1,7 @@
 [{
     "srcDir": ".",
     "destDir": "/tmp/.onsave",
-    "files": "**",
+    "files": ["py/*.py", "test/*.sh"],
     "command": "coda -t '${srcFile}'",
     "showOutput": false,
     "showError": false
