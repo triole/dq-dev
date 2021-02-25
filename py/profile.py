@@ -4,8 +4,8 @@ from shutil import copyfile
 from sys import exit as x
 
 from py.colours import Colours
-from py.util import (find, listdirs_only, mkdir, path_up_to_last_slash, pprint,
-                     ptable, read_yaml, rxsearch, write_yaml)
+from py.util import (find, listdirs_only, mkdir, path_up_to_last_slash, ptable,
+                     read_yaml, rxsearch, write_yaml)
 
 
 class Profile():
@@ -22,17 +22,22 @@ class Profile():
             )
         else:
             mkdir(self.get_profile_folder_by_name(profname))
-            yaml_file = pj(
+            conf_yaml = pj(
                 self.get_profile_folder_by_name(profname), 'conf.yaml'
+            )
+            secrets_yaml = pj(
+                self.get_profile_folder_by_name(profname), 'secrets.yaml'
             )
             print(
                 'Fresh profile ' + self.c.yel(profname) +
                 ' created inside folder ' +
                 self.c.yel(self.get_profile_folder_by_name(profname)) +
                 '\nPlease add your local settings to ' +
-                self.c.yel(yaml_file)
+                self.c.yel(conf_yaml) +
+                '\nAnd don\'t forget your secrets.'
             )
-            copyfile(self.conf['files']['base_conf'], yaml_file)
+            copyfile(self.conf['files']['base_conf'], conf_yaml)
+            copyfile(self.conf['files']['base_secrets'], secrets_yaml)
 
     def set(self, profname):
         if self.profile_exists(profname) is False:

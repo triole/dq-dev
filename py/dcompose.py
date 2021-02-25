@@ -24,11 +24,11 @@ class DCompose():
             arr[i] = self.expand_vars(arr[i], container_name)
         return arr
 
-    def expand_vars(self, str, container_name=None):
-        if '<' not in str and '>' not in str:
-            return str
+    def expand_vars(self, string, container_name=None):
+        if '<' not in string and '>' not in string:
+            return string
         # expand variables set in config
-        str = str\
+        string = string\
             .replace('<HOME>', os.environ['HOME'])\
             .replace('<ACTIVE_APP>', self.conf['conf']['active_app'])\
             .replace('<CONTAINER_PGAPP>', self.nam_con('pgapp'))\
@@ -44,10 +44,11 @@ class DCompose():
             except KeyError:
                 pass
             else:
-                for env_var in env_vars:
-                    key, val = env_var.split('=')
-                    if key != "" and val != "":
-                        str = str.replace('<' + key.upper() + '>', val)
+                for k in env_vars:
+                    key = str(k)
+                    val = str(env_vars[key])
+                    if key != '' and val != '':
+                        string = string.replace('<' + key.upper() + '>', val)
         # add additional packages
         if container_name is not None:
             try:
@@ -72,10 +73,10 @@ class DCompose():
                 sys.exit()
             else:
                 var = '<ADDITIONAL_PACKAGES>'
-                if var in str:
-                    str = str.replace('<ADDITIONAL_PACKAGES>', p)
-                    str = uncomment_line(str)
-        return str
+                if var in string:
+                    string = string.replace('<ADDITIONAL_PACKAGES>', p)
+                    string = uncomment_line(string)
+        return string
 
     # service and container names
     def make_names(self):
@@ -134,8 +135,13 @@ class DCompose():
     def add_env(self):
         for service in self.conf['conf']['env']:
             try:
+                env_arr = []
+                for k in self.conf['conf']['env'][service]:
+                    key = str(k)
+                    val = str(self.conf['conf']['env'][service][key])
+                    env_arr.append(key.upper() + '=' + val)
                 env = self.expand_vars_arr(
-                    self.conf['conf']['env'][service], service
+                    env_arr, service
                 )
             except KeyError:
                 pass
@@ -279,15 +285,15 @@ class DCompose():
             pprint(self.dcyaml)
         else:
             print(
-                'Write dc yaml to ' +
-                self.conf['files']['dc_yaml']
+                'Write dc yaml to  ' +
+                self.col.yel(self.conf['files']['dc_yaml']) + '\n'
             )
             write_yaml(self.dcyaml, self.conf['files']['dc_yaml'])
 
     def render_dockerfile_templates(self):
         arr = find(self.conf['basedir'], '.*/dockerfile.tpl', 'f')
         for fn in arr:
-            # print('Render dockerfile template ' + self.col.yel(fn))
+            print('Render dockerfile template ' + self.col.yel(fn))
             self.render_template_file(fn)
 
     def render_template_file(self, filename):
