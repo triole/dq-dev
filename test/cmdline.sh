@@ -3,7 +3,7 @@
 scriptdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 basedir=$(echo "${scriptdir}" | grep -Po ".*(?=/)")
 profdir="${basedir}/usr/profiles"
-active_yaml="${profdir}/active.yaml"
+active_yaml="${profdir}/active.toml"
 spacer="\t::\t"
 cd "${basedir}"
 
@@ -35,7 +35,7 @@ function test() {
     failed="false"
     cmd="python manage.py ${1}"
     rx="${2}"
-    eval ${cmd} | grep -Poi "${rx}" >/dev/null 2>&1 || fail
+    eval "${cmd}" | grep -Poi "${rx}" >/dev/null 2>&1 || fail
     if [[ "${failed}" == "false" ]]; then
         pass
     fi

@@ -3,7 +3,7 @@ from os.path import isfile
 from os.path import join as pj
 
 from py.colours import Colours
-from py.util import mkdir, read_yaml, x
+from py.util import mkdir, read_toml, x
 
 
 def merge_dictionaries(dict1, dict2):
@@ -28,9 +28,9 @@ def init(args):
     conf['files'] = {}
     conf['prof'] = {}
     conf['prof']['basedir'] = pj(conf['basedir'], 'usr', 'profiles')
-    conf['files']['active_conf'] = pj(conf['prof']['basedir'], 'active.yaml')
-    conf['files']['base_conf'] = pj(basedir, 'conf', 'baseconf.yaml')
-    conf['files']['base_secrets'] = pj(basedir, 'conf', 'secrets.yaml')
+    conf['files']['active_conf'] = pj(conf['prof']['basedir'], 'active.toml')
+    conf['files']['base_conf'] = pj(basedir, 'conf', 'baseconf.toml')
+    conf['files']['base_secrets'] = pj(basedir, 'conf', 'secrets.toml')
 
     conf['args']['list'] = True
     conf['args']['down'] = parse_nargs(args.down)
@@ -42,7 +42,7 @@ def init(args):
     conf['args']['set'] = args.set_profile
     conf['args']['create'] = args.create_profile
 
-    apc = read_yaml(conf['files']['active_conf'])
+    apc = read_toml(conf['files']['active_conf'])
     conf['prof']['name'] = ''
     if apc is not None:
         conf['prof']['name'] = apc['active_profile_name']
@@ -58,9 +58,9 @@ def init(args):
 
     # read base configurations
     print('Read base config  ' + col.yel(conf['files']['base_conf']))
-    base_conf = read_yaml(conf['files']['base_conf'])
+    base_conf = read_toml(conf['files']['base_conf'])
     print('Read base secrets ' + col.yel(conf['files']['base_secrets']))
-    base_secrets = read_yaml(conf['files']['base_secrets'])
+    base_secrets = read_toml(conf['files']['base_secrets'])
     base_conf['env'] = merge_dictionaries(base_conf['env'], base_secrets)
     conf['conf'] = base_conf
 
@@ -79,15 +79,15 @@ def init(args):
     conf['files']['dc_yaml'] = pj(
         conf['prof']['folder'], 'docker-compose.yaml'
     )
-    conf['files']['prof_conf'] = pj(conf['prof']['folder'], 'conf.yaml')
-    conf['files']['prof_secrets'] = pj(conf['prof']['folder'], 'secrets.yaml')
+    conf['files']['prof_conf'] = pj(conf['prof']['folder'], 'conf.toml')
+    conf['files']['prof_secrets'] = pj(conf['prof']['folder'], 'secrets.toml')
 
     if conf['args']['set'] is None:
         print('\nUse profile       ' + col.gre(conf['prof']['name']))
     if isfile(conf['files']['prof_conf']) is True:
         if conf['args']['set'] is None:
             print('Read prof config  ' + col.yel(conf['files']['prof_conf']))
-        prof_conf = read_yaml(conf['files']['prof_conf'])
+        prof_conf = read_toml(conf['files']['prof_conf'])
         # merge the two
         conf['conf'] = merge_dictionaries(conf['conf'], prof_conf)
     else:
@@ -103,7 +103,7 @@ def init(args):
 
     if isfile(conf['files']['prof_secrets']) is True:
         print('Read prof secrets ' + col.yel(conf['files']['prof_conf']))
-        prof_secrets = read_yaml(conf['files']['prof_secrets'])
+        prof_secrets = read_toml(conf['files']['prof_secrets'])
         conf['conf']['env'] = merge_dictionaries(conf['conf']['env'], prof_secrets)
 
     # user settings

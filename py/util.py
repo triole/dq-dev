@@ -7,6 +7,7 @@ from os.path import sep as sep
 from subprocess import PIPE, Popen
 from sys import exit as x
 
+import toml
 import yaml
 from tabulate import tabulate
 
@@ -73,16 +74,36 @@ def mkdir(dir):
         os.makedirs(dir)
 
 
-def read_yaml(filename):
+def read_toml(filename):
     if os.path.isfile(filename) is False:
         print('yaml file does not exist: ' + filename)
     else:
-        with open(filename, 'r') as stream:
+        with open(filename) as filedata:
             try:
-                return(yaml.safe_load(stream))
-            except yaml.YAMLError as exc:
-                print(exc)
+                data = filedata.read()
+                d = toml.loads(data)
+                return(d)
+            except Exception as e:
+                print('toml decode error: ' + str(filename))
+                raise(e)
     return None
+
+
+# def read_yaml(filename):
+#     if os.path.isfile(filename) is False:
+#         print('yaml file does not exist: ' + filename)
+#     else:
+#         with open(filename, 'r') as stream:
+#             try:
+#                 return(yaml.safe_load(stream))
+#             except yaml.YAMLError as exc:
+#                 print(exc)
+#     return None
+
+
+def write_toml(data, filename):
+    with open(filename, "w") as toml_file:
+        toml.dump(data, toml_file)
 
 
 def write_yaml(data, filename):

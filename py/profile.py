@@ -5,7 +5,7 @@ from sys import exit as x
 
 from py.colours import Colours
 from py.util import (find, listdirs_only, mkdir, path_up_to_last_slash, ptable,
-                     read_yaml, rxsearch, write_yaml)
+                     read_toml, rxsearch, write_toml)
 
 
 class Profile():
@@ -23,10 +23,10 @@ class Profile():
         else:
             mkdir(self.get_profile_folder_by_name(profname))
             conf_yaml = pj(
-                self.get_profile_folder_by_name(profname), 'conf.yaml'
+                self.get_profile_folder_by_name(profname), 'conf.toml'
             )
             secrets_yaml = pj(
-                self.get_profile_folder_by_name(profname), 'secrets.yaml'
+                self.get_profile_folder_by_name(profname), 'secrets.toml'
             )
             print(
                 'Fresh profile ' + self.c.yel(profname) +
@@ -51,7 +51,7 @@ class Profile():
             )
             p = {}
             p['active_profile_name'] = profname
-            write_yaml(p, self.conf['files']['active_conf'])
+            write_toml(p, self.conf['files']['active_conf'])
 
     def read_profile_config(self, profname=None):
         if profname is None or profname is True:
@@ -84,11 +84,11 @@ class Profile():
                 print('\t' + el)
             x(1)
         r['name'] = profname
-        r['yaml'] = pj(f[0], 'conf.yaml')
+        r['yaml'] = pj(f[0], 'conf.toml')
         r['folder'] = path_up_to_last_slash(f[0])
         r['dc_yaml'] = pj(r['folder'], 'docker-compose.yaml')
         if isfile(r['yaml']) is True:
-            r['conf'] = read_yaml(r['yaml'])
+            r['conf'] = read_toml(r['yaml'])
         return r
 
     def boolstr(self, bool):
@@ -108,7 +108,7 @@ class Profile():
             shortname = rxsearch(r'[^/]+/[^/]+$', el)
             profname = rxsearch(r'[^/]+$', shortname)
             ap = self.conf['prof']['name']
-            has_conf = self.boolstr(isfile(pj(el, 'conf.yaml')))
+            has_conf = self.boolstr(isfile(pj(el, 'conf.toml')))
             active = self.boolstr(profname == ap)
             listdirs_only(self.get_profile_folder_by_name(el))
             volumes = ' '.join(
@@ -125,10 +125,5 @@ class Profile():
             profname = self.conf['prof']['name']
         return pj(self.conf['prof']['basedir'], profname)
 
-    # def get_profile_yaml_by_name(self, profname):
-    #     return pj(
-    #         self.get_profile_folder_by_name(profname), 'docker-compose.yaml'
-    #     )
-    #
     def profile_exists(self, profname):
         return isdir(self.get_profile_folder_by_name(profname))
