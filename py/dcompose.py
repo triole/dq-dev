@@ -285,7 +285,7 @@ class DCompose():
             pprint(self.dcyaml)
         else:
             print(
-                'Write dc yaml to  ' +
+                'Write dc yaml to    ' +
                 self.col.yel(self.conf['files']['dc_yaml']) + '\n'
             )
             write_yaml(self.dcyaml, self.conf['files']['dc_yaml'])

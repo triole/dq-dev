@@ -1,6 +1,8 @@
 import os
 import pprint as ppr
 import re
+import shutil
+import sys
 from os.path import isdir
 from os.path import join as pj
 from os.path import sep as sep
@@ -69,9 +71,31 @@ def is_git(folder):
     return (True, out)
 
 
+def copy_dir(src, trg):
+    try:
+        shutil.copytree(src, trg)
+    except FileNotFoundError as e:
+        print('Unable to copy directory. ' + str(e))
+        sys.exit()
+
+
+def empty_dir(dir):
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
+
+
+def exists(dir):
+    return os.path.exists(dir)
+
+
 def mkdir(dir):
-    if not os.path.exists(dir):
+    if exists(dir) is False:
         os.makedirs(dir)
+
+
+def remove_dir(dir):
+    if exists(dir) is True:
+        shutil.rmtree(dir)
 
 
 def read_toml(filename):
@@ -87,18 +111,6 @@ def read_toml(filename):
                 print('toml decode error: ' + str(filename))
                 raise(e)
     return None
-
-
-# def read_yaml(filename):
-#     if os.path.isfile(filename) is False:
-#         print('yaml file does not exist: ' + filename)
-#     else:
-#         with open(filename, 'r') as stream:
-#             try:
-#                 return(yaml.safe_load(stream))
-#             except yaml.YAMLError as exc:
-#                 print(exc)
-#     return None
 
 
 def write_toml(data, filename):

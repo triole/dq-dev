@@ -47,7 +47,7 @@ wordpress_title = "dqdev"
 wordpress_url = "/cms/"
 wordpress_cli = "/usr/bin/wp"
 wordpress_db_host = "<CONTAINER_WPDB>:3306"
-wordpress_db_user = "wordpress"
+wordpress_db_name = "wordpress"
 wordpress_table_prefix = "wp_"
 database_app = "postgresql://daiquiri_app:daiquiri_app@<CONTAINER_PGAPP>/daiquiri_app"
 database_data = "postgresql://daiquiri_data:daiquiri_data@<CONTAINER_PGDATA>/daiquiri_data"
@@ -96,3 +96,20 @@ daiquiri = [ "wget", "procps" ]
 pgapp = [ "procps" ]
 pgdata = [ "procps" ]
 wpdb = [ "procps" ]
+
+# the following entries define folders that contain custom scripts
+# these can be run during docker build or when everything is up
+# the key corresponds to the container name, the value is the folder
+# all scripts in the folder will be executed in alphabetically order
+[custom_scripts]
+[custom_scripts.build]
+# daiquiri = "/tmp/bash_scripts/build"
+# pgapp = "/tmp/bash_scripts/build"
+# pgdata = "/tmp/bash_scripts/build"
+# wpdb = "/tmp/bash_scripts/build"
+
+[custom_scripts.up]
+# daiquiri = "/tmp/bash_scripts/up"
+# pgapp = "/tmp/bash_scripts/up"
+# pgdata = "/tmp/bash_scripts/up"
+# wpdb = "/tmp/bash_scripts/up"

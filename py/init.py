@@ -3,7 +3,7 @@ from os.path import isfile
 from os.path import join as pj
 
 from py.colours import Colours
-from py.util import mkdir, read_toml, x
+from py.util import copy_dir, exists, mkdir, read_toml, remove_dir, x
 
 
 def merge_dictionaries(dict1, dict2):
@@ -57,9 +57,9 @@ def init(args):
                 break
 
     # read base configurations
-    print('Read base config  ' + col.yel(conf['files']['base_conf']))
+    print('Read base config    ' + col.yel(conf['files']['base_conf']))
     base_conf = read_toml(conf['files']['base_conf'])
-    print('Read base secrets ' + col.yel(conf['files']['base_secrets']))
+    print('Read base secrets   ' + col.yel(conf['files']['base_secrets']))
     base_secrets = read_toml(conf['files']['base_secrets'])
     base_conf['env'] = merge_dictionaries(base_conf['env'], base_secrets)
     conf['conf'] = base_conf
@@ -83,10 +83,10 @@ def init(args):
     conf['files']['prof_secrets'] = pj(conf['prof']['folder'], 'secrets.toml')
 
     if conf['args']['set'] is None:
-        print('\nUse profile       ' + col.gre(conf['prof']['name']))
+        print('\nUse profile         ' + col.gre(conf['prof']['name']))
     if isfile(conf['files']['prof_conf']) is True:
         if conf['args']['set'] is None:
-            print('Read prof config  ' + col.yel(conf['files']['prof_conf']))
+            print('Read prof config    ' + col.yel(conf['files']['prof_conf']))
         prof_conf = read_toml(conf['files']['prof_conf'])
         # merge the two
         conf['conf'] = merge_dictionaries(conf['conf'], prof_conf)
@@ -102,9 +102,10 @@ def init(args):
             )
 
     if isfile(conf['files']['prof_secrets']) is True:
-        print('Read prof secrets ' + col.yel(conf['files']['prof_conf']))
+        print('Read prof secrets   ' + col.yel(conf['files']['prof_conf']))
         prof_secrets = read_toml(conf['files']['prof_secrets'])
-        conf['conf']['env'] = merge_dictionaries(conf['conf']['env'], prof_secrets)
+        conf['conf']['env'] =\
+            merge_dictionaries(conf['conf']['env'], prof_secrets)
 
     # user settings
     conf['user'] = {}
@@ -114,6 +115,17 @@ def init(args):
     conf['user']['groupstr'] = str(conf['user']['group'])
     conf['dry_run'] = args.dry_run
     mkdir(conf['prof']['basedir'])
+
+    clean_temp_files(
+        conf['basedir'],
+        conf['conf']['enable_containers']
+    )
+
+    copy_custom_scripts(
+        conf['conf']['custom_scripts'],
+        conf['basedir']
+    )
+
     return conf
 
 
@@ -132,3 +144,29 @@ def get_group(user_id):
         return user_id
     else:
         return groups[len(groups)-1]
+
+
+def clean_temp_files(basedir, container_names):
+    for con in container_names:
+        fol = pj(
+            basedir, 'docker', con, 'rootfs', 'tmp'
+        )
+        remove_dir(fol)
+
+
+def copy_custom_scripts(cs_conf, basedir):
+    col = Colours()
+    for typ in cs_conf:
+        for con in cs_conf[typ]:
+            dockdir = pj(basedir, 'docker', con)
+            if exists(dockdir) is True:
+                target_folder = pj(
+                    dockdir, 'rootfs', 'tmp', 'custom_scripts', typ
+                )
+                source_folder = cs_conf[typ][con]
+                print(
+                    'Copy custom scripts ' +
+                    col.yel(source_folder) + ' to ' +
+                    col.gre(target_folder)
+                )
+                copy_dir(source_folder, target_folder)
