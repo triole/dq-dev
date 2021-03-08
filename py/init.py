@@ -124,7 +124,8 @@ def init(args):
 
     copy_custom_scripts(
         conf['conf']['custom_scripts'],
-        conf['basedir']
+        conf['basedir'],
+        conf['conf']['active_app']
     )
 
     return conf
@@ -155,7 +156,7 @@ def clean_temp_files(basedir, container_names):
         remove_dir(fol)
 
 
-def copy_custom_scripts(cs_conf, basedir):
+def copy_custom_scripts(cs_conf, basedir, active_app):
     col = Colours()
     for typ in cs_conf:
         for con in cs_conf[typ]:
@@ -164,7 +165,7 @@ def copy_custom_scripts(cs_conf, basedir):
                 target_folder = pj(
                     dockdir, 'rootfs', 'tmp', 'custom_scripts', typ
                 )
-                source_folder = cs_conf[typ][con]
+                source_folder = expand(cs_conf[typ][con], active_app)
                 if isdir(source_folder) is True:
                     files = listfiles_only(source_folder)
                     if len(files) > 0:
@@ -175,3 +176,9 @@ def copy_custom_scripts(cs_conf, basedir):
                     for fil in files:
                         copy_file(fil, target_folder)
     print('')
+
+
+def expand(s, active_app):
+    return s\
+        .replace('<HOME>', os.environ['HOME'])\
+        .replace('<ACTIVE_APP>', active_app)

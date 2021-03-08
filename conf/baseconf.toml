@@ -105,12 +105,12 @@ wpdb = [ "procps" ]
 [custom_scripts]
 [custom_scripts.build]
 # daiquiri = "/tmp/bash_scripts/build"
-# pgapp = "/tmp/bash_scripts/build"
-# pgdata = "/tmp/bash_scripts/build"
+# pgapp = "<HOME>/bash_scripts/build"
+# pgdata = "<HOME>/<ACTIVE_APP>/bash_scripts/build"
 # wpdb = "/tmp/bash_scripts/build"
 
 [custom_scripts.up]
-# daiquiri = "/tmp/bash_scripts/up"
-# pgapp = "/tmp/bash_scripts/up"
-# pgdata = "/tmp/bash_scripts/up"
-# wpdb = "/tmp/bash_scripts/up"
+# daiquiri = ""
+# pgapp = ""
+# pgdata = ""
+# wpdb = ""
