@@ -1,17 +1,20 @@
 import os
 import pprint as ppr
 import re
-import shutil
-import sys
-from os.path import isdir
+from os.path import isdir, isfile
 from os.path import join as pj
 from os.path import sep as sep
+from shutil import copyfile, rmtree
 from subprocess import PIPE, Popen
 from sys import exit as x
 
 import toml
 import yaml
 from tabulate import tabulate
+
+from py.colours import Colours
+
+col = Colours()
 
 
 def find(root, filter='.*', filter_type='f'):
@@ -34,8 +37,19 @@ def listdirs_only(root):
     p = os.listdir(root)
     r = []
     for i in p:
-        if isdir(pj(root, i)):
-            r.append(i)
+        fil = pj(root, i)
+        if isdir(fil):
+            r.append(fil)
+    return sorted(r)
+
+
+def listfiles_only(root):
+    p = os.listdir(root)
+    r = []
+    for i in p:
+        fil = pj(root, i)
+        if isfile(fil):
+            r.append(fil)
     return sorted(r)
 
 
@@ -71,12 +85,18 @@ def is_git(folder):
     return (True, out)
 
 
-def copy_dir(src, trg):
-    try:
-        shutil.copytree(src, trg)
-    except FileNotFoundError as e:
-        print('Unable to copy directory. ' + str(e))
-        sys.exit()
+def shortname(p):
+    return re.search(r'[^/]+$', p).group(0)
+
+
+def copy_file(src,  trg):
+    if exists(trg) is False:
+        mkdir(trg)
+    if isdir(trg) is True:
+        sn = shortname(src)
+        trg = pj(trg, sn)
+    print('Copy file ' + col.mag(src) + ' to ' + col.gre(trg))
+    copyfile(src, trg)
 
 
 def empty_dir(dir):
@@ -95,7 +115,7 @@ def mkdir(dir):
 
 def remove_dir(dir):
     if exists(dir) is True:
-        shutil.rmtree(dir)
+        rmtree(dir)
 
 
 def read_toml(filename):

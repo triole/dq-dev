@@ -1,9 +1,10 @@
 import os
-from os.path import isfile
+from os.path import isdir, isfile
 from os.path import join as pj
 
 from py.colours import Colours
-from py.util import copy_dir, exists, mkdir, read_toml, remove_dir, x
+from py.util import (copy_file, exists, listfiles_only, mkdir, read_toml,
+                     remove_dir, shortname, x)
 
 
 def merge_dictionaries(dict1, dict2):
@@ -164,9 +165,13 @@ def copy_custom_scripts(cs_conf, basedir):
                     dockdir, 'rootfs', 'tmp', 'custom_scripts', typ
                 )
                 source_folder = cs_conf[typ][con]
-                print(
-                    'Copy custom scripts ' +
-                    col.yel(source_folder) + ' to ' +
-                    col.gre(target_folder)
-                )
-                copy_dir(source_folder, target_folder)
+                if isdir(source_folder) is True:
+                    files = listfiles_only(source_folder)
+                    if len(files) > 0:
+                        print(
+                            '\nAdd custom scripts to container ' +
+                            col.gre(shortname(dockdir))
+                        )
+                    for fil in files:
+                        copy_file(fil, target_folder)
+    print('')

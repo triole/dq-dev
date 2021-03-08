@@ -101,6 +101,7 @@ wpdb = [ "procps" ]
 # these can be run during docker build or when everything is up
 # the key corresponds to the container name, the value is the folder
 # all scripts in the folder will be executed in alphabetically order
+# scripts in sub folders won't be considered
 [custom_scripts]
 [custom_scripts.build]
 # daiquiri = "/tmp/bash_scripts/build"
