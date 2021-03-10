@@ -6,15 +6,14 @@ from py.util import run_cmd
 
 
 class Runner():
-    def __init__(self, dcyaml, debug):
+    def __init__(self, conf):
         self.c = Colours()
-        self.dcyaml = dcyaml
-        self.debug = debug
+        self.conf = conf
         self.need_sudo = self.need_sudo()
 
     def run_cmd_fg(self, cmd):
         print(self.c.mag(' '.join(cmd)))
-        if self.debug is False:
+        if self.conf['dry_run'] is False:
             subprocess.run(cmd)
 
     def need_sudo(self):
@@ -25,7 +24,15 @@ class Runner():
             return True
 
     def file_arg_compose(self):
-        return ['-f', self.dcyaml]
+        return ['-f', self.conf['files']['dc_yaml']]
+
+    def run_docker(self, args):
+        cmd_arr = []
+        if self.need_sudo is True:
+            cmd_arr.append('sudo')
+        cmd_arr.append('docker')
+        cmd_arr.extend(args)
+        self.run_cmd_fg(cmd_arr)
 
     def run_compose(self, args):
         cmd_arr = []
@@ -55,3 +62,13 @@ class Runner():
 
     def remove_images(self):
         self.run_compose(['down', '--volume'])
+
+    def create_network(self):
+        self.run_docker([
+            'network', 'create', self.conf['prof']['network_name']
+        ])
+
+    def remove_network(self):
+        self.run_docker([
+            'network', 'remove', self.conf['prof']['network_name']
+        ])

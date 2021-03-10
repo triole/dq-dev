@@ -35,6 +35,8 @@ def init(args):
 
     conf['args']['list'] = True
     conf['args']['down'] = parse_nargs(args.down)
+    conf['args']['remove_network'] = parse_bool(args.remove_network)
+    conf['args']['remove_images'] = parse_bool(args.remove_images)
     conf['args']['render'] = parse_nargs(args.render)
     conf['args']['run'] = parse_nargs(args.run)
     conf['args']['stop'] = parse_nargs(args.stop)
@@ -77,6 +79,7 @@ def init(args):
     conf['prof']['folder'] = pj(
         conf['prof']['basedir'], conf['prof']['name']
     )
+    conf['prof']['network_name'] = 'dqdevnet_' + conf['prof']['name']
     conf['files']['dc_yaml'] = pj(
         conf['prof']['folder'], 'docker-compose.yaml'
     )
@@ -129,6 +132,13 @@ def init(args):
     )
 
     return conf
+
+
+def parse_bool(boolval):
+    if boolval is True:
+        return boolval
+    else:
+        return None
 
 
 def parse_nargs(nargs):

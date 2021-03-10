@@ -78,9 +78,12 @@ class DCompose():
                     string = uncomment_line(string)
         return string
 
+    def iter_services(self):
+        return self.conf['conf']['env']
+
     # service and container names
     def make_names(self):
-        for service in self.conf['conf']['env']:
+        for service in self.iter_services():
             self.names[service] = {}
             self.names[service]['con'] =\
                 'dqdev' + '-' + service + '-' + self.conf['prof']['name']
@@ -112,7 +115,7 @@ class DCompose():
         self.dcyaml['services'] = {}
         self.dcyaml['volumes'] = {}
 
-        for service in self.conf['conf']['env']:
+        for service in self.iter_services():
             if self.container_enabled(service) is True:
                 c = self.nam_img(service)
                 self.dcyaml['services'][c] = {}
@@ -133,7 +136,7 @@ class DCompose():
 
     # env
     def add_env(self):
-        for service in self.conf['conf']['env']:
+        for service in self.iter_services():
             try:
                 env_arr = []
                 for k in self.conf['conf']['env'][service]:
@@ -163,6 +166,16 @@ class DCompose():
                     self.dcyaml['services'][self.nam_img(service)]['environment'] = env
                 except KeyError:
                     pass
+
+    # network
+    def add_networks(self):
+        nn = self.prof.conf['prof']['network_name']
+        self.dcyaml['networks'] = {}
+        self.dcyaml['networks'][nn] = {}
+        self.dcyaml['networks'][nn]['external'] = {}
+        self.dcyaml['networks'][nn]['external']['name'] = nn
+        for service in self.dcyaml['services']:
+            self.dcyaml['services'][service]['networks'] = [nn]
 
     # ports
     def add_ports(self):
@@ -322,6 +335,7 @@ class DCompose():
         self.add_depends_on()
         self.add_env()
         self.add_ports()
+        self.add_networks()
         self.add_volumes()
 
         self.write_yaml()

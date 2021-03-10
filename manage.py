@@ -37,6 +37,10 @@ parser.add_argument(
     help='remove images when running "down", use in combination "-d -rmi"\n\n'
 )
 parser.add_argument(
+    '-rmn', '--remove_network', action='store_true', default=False,
+    help='remove daiquiri containers\' network'
+)
+parser.add_argument(
     '-g', '--tail_logs', type=str, nargs='*', default=None,
     help='tail docker compose logs\n\n'
 )
@@ -94,17 +98,26 @@ if __name__ == '__main__':
     if args.run is not None:
         dco.render_dc_yaml(conf['args']['run'])
         dco.render_dockerfile_templates()
-        run = Runner(conf['files']['dc_yaml'], args.dry_run)
+        run = Runner(conf)
+        run.create_network()
         run.start()
 
     if args.stop is not None:
-        run = Runner(conf['files']['dc_yaml'], args.dry_run)
+        run = Runner(conf)
         run.stop()
 
     if args.down is not None:
-        run = Runner(conf['files']['dc_yaml'], args.dry_run)
-        run.down(args.remove_images)
+        run = Runner(conf)
+        run.down()
 
     if args.tail_logs is True:
-        run = Runner(conf['files']['dc_yaml'])
+        run = Runner(conf)
         run.tail_logs()
+
+    if args.remove_images is True:
+        run = Runner(conf)
+        run.remove_images()
+
+    if args.remove_network is True:
+        run = Runner(conf)
+        run.remove_network()
