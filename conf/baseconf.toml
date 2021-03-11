@@ -32,6 +32,7 @@ dq_app = "/home/dq/app"
 shed = "/vol/tools/shed"
 testdata = "/vol/testdata"
 
+# please make sure the daiquiri port matches the one in the base_url below
 # db ports do not have to be exposed, but it's nice for test and development
 [exposed_ports]
 daiquiri = 9280
