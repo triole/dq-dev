@@ -34,7 +34,7 @@ testdata = "/vol/testdata"
 
 # db ports do not have to be exposed, but it's nice for test and development
 [exposed_ports]
-daiquiri = 9290
+daiquiri = 9280
 # pgapp = 9281
 # pgdata = 9282
 # wpdb = 9283
