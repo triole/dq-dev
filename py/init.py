@@ -3,8 +3,9 @@ from os.path import isdir, isfile
 from os.path import join as pj
 
 from py.colours import Colours
-from py.util import (copy_file, exists, listfiles_only, mkdir, read_toml,
-                     remove_dir, shortname, x)
+from py.util import (copy_file, exists, is_port_no, listfiles_only,
+                     lookup_env_value, mkdir, pprint, read_toml, remove_dir,
+                     shortname, x)
 
 
 def merge_dictionaries(dict1, dict2):
@@ -131,6 +132,9 @@ def init(args):
         conf['conf']['active_app']
     )
 
+    conf['conf']['portmap'] = parse_ports(conf)
+    del conf['conf']['exposed_ports']
+
     return conf
 
 
@@ -192,3 +196,30 @@ def expand(s, active_app):
     return s\
         .replace('<HOME>', os.environ['HOME'])\
         .replace('<ACTIVE_APP>', active_app)
+
+
+def parse_ports(conf):
+    portmap = {}
+    for service_name in conf['conf']['enable_containers']:
+        r = None
+        try:
+            exp = conf['conf']['exposed_ports'][service_name]
+        except KeyError:
+            pass
+        else:
+            if is_port_no(exp) is True:
+                r = {}
+                r['exposed'] = str(exp)
+                r['envstr'] = r['exposed'] + ':'
+            # try:
+            inp = lookup_env_value(
+                conf['conf']['env'][service_name], '.*_port$'
+            )
+            if inp is None or is_port_no(inp) is False:
+                r['internal'] = r['exposed']
+            else:
+                r['internal'] = str(inp)
+            r['envstr'] += r['internal']
+        if r is not None:
+            portmap[service_name] = r
+    return portmap

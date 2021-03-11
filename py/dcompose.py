@@ -150,12 +150,11 @@ class DCompose():
                 pass
             else:
                 try:
-                    exposed_ports = self.conf['conf']['exposed_ports'][service]
+                    p = self.conf['conf']['portmap'][service]
                 except KeyError:
                     pass
-                if exposed_ports is not None:
-                    p = exposed_ports[0].split(':')[0]
-                    env.append('EXPOSED_PORT=' + str(p))
+                else:
+                    env.append('EXPOSED_PORT=' + str(p['exposed']))
 
                 for mp in self.conf['conf']['docker_volume_mountpoints']:
                     key = ''.join(re.findall('[A-Z0-9]', mp.upper()))
@@ -179,17 +178,10 @@ class DCompose():
 
     # ports
     def add_ports(self):
-        for service in self.conf['conf']['exposed_ports']:
+        for service in self.conf['conf']['portmap']:
             try:
-                p =\
-                    self.conf['conf']['exposed_ports'][service]
-            except KeyError:
-                pass
-            if p is None:
-                p = []
-            # same as in the last lines of add_env
-            try:
-                self.dcyaml['services'][self.nam_img(service)]['ports'] = p
+                self.dcyaml['services'][self.nam_img(service)]['ports'] =\
+                    [self.conf['conf']['portmap'][service]['envstr']]
             except KeyError:
                 pass
 

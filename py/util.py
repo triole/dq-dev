@@ -85,10 +85,6 @@ def is_git(folder):
     return (True, out)
 
 
-def shortname(p):
-    return re.search(r'[^/]+$', p).group(0)
-
-
 def copy_file(src,  trg):
     if exists(trg) is False:
         mkdir(trg)
@@ -147,6 +143,29 @@ def write_array_to_file(data, filename, mode='w'):
     with open(filename, mode) as fp:
         for line in data:
             fp.write(line + '\n')
+
+
+def is_port_no(s):
+    try:
+        i = int(s)
+    except (TypeError, ValueError):
+        return False
+    else:
+        if i <= 65535:
+            return True
+    return False
+
+
+def lookup_env_value(env, rx):
+    r = None
+    for el in env:
+        if rxbool(rx, el):
+            r = env[el]
+    return r
+
+
+def shortname(p):
+    return re.search(r'[^/]+$', p).group(0)
 
 
 def rxsearch(rx, s, gr=0):
