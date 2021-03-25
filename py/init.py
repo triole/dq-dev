@@ -3,9 +3,9 @@ from os.path import isdir, isfile
 from os.path import join as pj
 
 from py.colours import Colours
-from py.util import (copy_file, exists, is_port_no, listfiles_only,
-                     lookup_env_value, mkdir, pprint, read_toml, remove_dir,
-                     shortname, x)
+from py.util import (copy_file, exists, is_port_no, listdirs_only,
+                     listfiles_only, lookup_env_value, mkdir, pprint,
+                     read_toml, remove_dir, shortname, x)
 
 
 def merge_dictionaries(dict1, dict2):
@@ -132,6 +132,8 @@ def init(args):
         conf['conf']['active_app']
     )
 
+    create_rootfs_folders(conf['basedir'])
+
     conf['conf']['portmap'] = parse_ports(conf)
     del conf['conf']['exposed_ports']
 
@@ -160,6 +162,12 @@ def get_group(user_id):
         return user_id
     else:
         return groups[len(groups)-1]
+
+
+def create_rootfs_folders(basedir):
+    dockerdir = pj(basedir, 'docker')
+    for dir in listdirs_only(dockerdir):
+        mkdir(pj(dir, 'rootfs'))
 
 
 def clean_temp_files(basedir, container_names):
