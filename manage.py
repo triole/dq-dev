@@ -110,7 +110,8 @@ if __name__ == '__main__':
         run = Runner(conf)
         run.down()
 
-    if args.tail_logs is True:
+    if conf['args']['tail_logs'] is True:
+        print('hello')
         run = Runner(conf)
         run.tail_logs()
 
