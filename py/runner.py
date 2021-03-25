@@ -14,7 +14,10 @@ class Runner():
     def run_cmd_fg(self, cmd):
         print(self.c.mag(' '.join(cmd)))
         if self.conf['dry_run'] is False:
-            subprocess.run(cmd)
+            try:
+                subprocess.run(cmd)
+            except KeyboardInterrupt:
+                pass
 
     def need_sudo(self):
         g = run_cmd(['groups'])
