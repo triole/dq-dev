@@ -5,6 +5,7 @@ ENV PATH="${PATH}:/opt:/vol/tools/shed"
 RUN apt update -y && apt install -y \
     postgresql-client
 
+COPY ./rootfs /
 RUN chmod -R 777 /tmp
 RUN find /tmp/custom_scripts/build -type f -executable | sort | xargs -i /bin/bash {}
 
