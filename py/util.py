@@ -130,7 +130,7 @@ def read_toml(filename):
 
 
 def write_toml(data, filename):
-    with open(filename, "w") as toml_file:
+    with open(filename, 'w') as toml_file:
         toml.dump(data, toml_file)
 
 
