@@ -51,9 +51,9 @@ class Runner():
     def stop(self):
         self.run_compose(['stop'])
 
-    def down(self, rmi):
+    def down(self):
         args = ['down', '--volumes', '--remove-orphans']
-        if rmi is True:
+        if self.conf['args']['remove_images'] is True:
             args.append('--rmi all')
         self.run_compose(args)
 
