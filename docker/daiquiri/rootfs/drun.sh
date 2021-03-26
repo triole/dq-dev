@@ -29,10 +29,10 @@ if [[ "${ASYNC}" == "True" ]]; then
 fi
 
 # install custom and fixture app scripts if there
-if [ -f "${DQAPP}/install-custom.sh" ]; then
-    echo "Run ${DQAPP} custom installation and fixture script..."
-    ${DQAPP}/install-custom.sh
-fi
+# if [ -f "${DQAPP}/install-custom.sh" ]; then
+#     echo "Run ${DQAPP} custom installation and fixture script..."
+#     ${DQAPP}/install-custom.sh
+# fi
 
 cd "${DQAPP}"
 if [[ -z "$(ps aux | grep "[g]unicorn")" ]]; then
