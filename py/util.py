@@ -12,9 +12,13 @@ import toml
 import yaml
 from tabulate import tabulate
 
-from py.colours import Colours
 
-col = Colours()
+def colgre(s):
+    return '\033[92m' + str(s) + '\033[0m'
+
+
+def colmag(s):
+    return '\033[95m' + str(s) + '\033[0m'
 
 
 def find(root, filter='.*', filter_type='f'):
@@ -91,7 +95,7 @@ def copy_file(src,  trg):
     if isdir(trg) is True:
         sn = shortname(src)
         trg = pj(trg, sn)
-    print('Copy file ' + col.mag(src) + ' to ' + col.gre(trg))
+    print('Copy file ' + colmag(src) + ' to ' + colgre(trg))
     copyfile(src, trg)
 
 
